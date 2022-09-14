@@ -1,0 +1,4 @@
+name = "IdealGasLib"
+uuid = "8ea2701e-a7f2-4ad3-bde6-f1a1a263bda4"
+authors = ["C. Naaktgeboren <NaaktgeborenC.PhD@gmail.com>"]
+version = "0.1.0"
