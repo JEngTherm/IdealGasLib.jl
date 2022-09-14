@@ -19,7 +19,7 @@ deco(x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = Symbol("noble-cp(
 Base.show(io::IO, x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
     if DEF[:pprint]
         print(io,
-            "$(string(deco(x)))$(EngThermBase.pDeco(𝗽)) for $(x.form): ",
+            "$(string(deco(x))) for $(x.form): ",
             "($(x.c)) ($(x.M))"
         )
     else
