@@ -23,9 +23,7 @@ Base.show(io::IO, x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begi
             "($(x.c)) ($(x.M))"
         )
     else
-        print(io,
-            "$(typeof(x))(($(x.form)) ($(x.c)) ($(x.M)))",
-        )
+        Base.show_default(io, x)
     end
 end
 
