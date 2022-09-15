@@ -69,6 +69,20 @@ Returns a particular gas's chemical formula for the substance with specific heat
 """
 form(x::nobleGasHeat)::String = x.form
 
+"""
+`(Tref(x::nobleGasHeat{𝗽,𝘅})::sysT{𝗽,𝘅}) where {𝗽,𝘅}`\n
+Returns a particular gas's reference state temperature for the substance with specific heat
+modeled by `x`.
+"""
+(Tref(x::nobleGasHeat{𝗽,𝘅})::sysT{𝗽,𝘅}) where {𝗽,𝘅} = x.Tref
+
+"""
+`(sref(x::nobleGasHeat{𝗽,𝘅,𝗯})::sAmt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯}`\n
+Returns a particular gas's reference state specific entropy for the substance with specific heat
+modeled by `x`.
+"""
+(sref(x::nobleGasHeat{𝗽,𝘅,𝗯})::sAmt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = x.sref
+
 
 #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 #                         Basic Ideal Gas Properties from nobleGasHeat                         #
