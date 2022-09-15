@@ -196,4 +196,39 @@ modeled by `x`, without conversions. For ideal gases, \$k = γ\$.
 (k(x::nobleGasHeat{𝗽,𝘅,𝗯})::kAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k(γ(x))  # γ fallback
 
 
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #     Δu: Particular gas variation of specific internal energy     #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+"""
+`(Δu(x::nobleGasHeat{𝗽,𝘅,𝗯},
+     Ti::sysT{𝗽,𝘅},
+     Tf::sysT{𝗽,𝘅},
+     B::Type{<:IntBase} = DEF[:IB])::ΔeAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
+Returns the particular gas variation in specific internal energy in the specified or default
+base for the substance with specific heat modeled by `x`, for process with initial and final
+temperatures of `Ti` and `Tf`, respectively.
+"""
+(Δu(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    Ti::sysT{𝗽,𝘅},
+    Tf::sysT{𝗽,𝘅},
+    B::Type{MA})::ΔeAmt{𝗽,𝘅,MA}) where {𝗽,𝘅,𝗯} = begin
+    cv(x, B) * (Tf - Ti)
+end
+
+(Δu(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    Ti::sysT{𝗽,𝘅},
+    Tf::sysT{𝗽,𝘅},
+    B::Type{MO})::ΔeAmt{𝗽,𝘅,MO}) where {𝗽,𝘅,𝗯} = begin
+    cv(x, B) * (Tf - Ti)
+end
+
+(Δu(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    Ti::sysT{𝗽,𝘅},
+    Tf::sysT{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::ΔeAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    cv(x, B) * (Tf - Ti)
+end
+
+
 # TODO: u, h, s°, Δu, Δh, Δs°
