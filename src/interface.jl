@@ -29,8 +29,13 @@ Function to return a particular substance's variation of specific internal energ
 """
 function Δu end
 
+"""
+Function to return a particular substance's variation of specific enthalpy.
+"""
+function Δh end
+
 
 # Interface exports
-export name, form, Tref, sref, Δu
+export name, form, Tref, sref, Δu, Δh
 
 
