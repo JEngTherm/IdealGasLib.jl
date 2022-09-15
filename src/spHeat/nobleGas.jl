@@ -27,6 +27,19 @@ Base.show(io::IO, x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begi
     end
 end
 
+# Type plain info access functions
+"""
+`name(x::nobleGasHeat)::String`\n
+Returns a particular gas's name for the substance with specific heat modeled by `x`.
+"""
+name(x::nobleGasHeat)::String = x.name
+
+"""
+`form(x::nobleGasHeat)::String`\n
+Returns a particular gas's chemical formula for the substance with specific heat modeled by `x`.
+"""
+form(x::nobleGasHeat)::String = x.form
+
 
 #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 #                         Basic Ideal Gas Properties from nobleGasHeat                         #
@@ -36,15 +49,15 @@ end
     #                 M: Particular gas molecular mass                 #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
-import EngThermBase: M
+import EngThermBase: m
 
 # Particular gas molecular mass
 """
-`(M(x::nobleGasHeat{𝗽,𝘅})::mAmt{𝗽,𝘅,MO}) where {𝗽,𝘅}`\n
+`(m(x::nobleGasHeat{𝗽,𝘅})::mAmt{𝗽,𝘅,MO}) where {𝗽,𝘅}`\n
 Returns the particular gas molecular mass for the substance with specific heat modeled by `x`
 without conversions.
 """
-(M(x::nobleGasHeat{𝗽,𝘅})::mAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = x.M
+(m(x::nobleGasHeat{𝗽,𝘅})::mAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = x.M
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
