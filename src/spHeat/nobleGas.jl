@@ -8,6 +8,33 @@ struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
     form::String        # Substance formula as a String
     M::mAmt{𝗽,𝘅,MO}     # The precision- exactness- parametric molar mass
     c::cpAmt{𝗽,𝘅,𝗯}     # The precision- exactness- base- parametric cp
+    Tref::sysT{𝗽,𝘅}     # The reference state temperature
+    sref::sAmt{𝗽,𝘅,𝗯}   # The reference state specific entropy
+    # Inner copy constructor
+    nobleGasHeat(x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
+        new{𝗽,𝘅,𝗯}(x.name, x.form, x.M, x.c, x.Tref, x.sref)
+    end
+    # Inner checking & promoting constructor
+    nobleGasHeat(NAM::AbstractString,
+                 FOR::AbstractString,
+                 __M::mAmt{𝗽𝗔,𝘅𝗔,MO},
+                 __c::cpAmt{𝗽𝗕,𝘅𝗕,𝗯},
+                 T_r::sysT{𝗽𝗖,𝘅𝗖},
+                 s_r::sAmt{𝗽𝗗,𝘅𝗗,𝗯}) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗽𝗖,𝘅𝗖,𝗽𝗗,𝘅𝗗,𝗯} = begin
+        # Precision and Exactness promotion
+        𝗽 = promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖, 𝗽𝗗)
+        𝘅 = promote_type(𝘅𝗔, 𝘅𝗕, 𝘅𝗖, 𝘅𝗗)
+        # Checks
+        @assert amt(__M).val >  0.0
+        @assert amt(__c).val >  0.0
+        @assert amt(T_r).val >  0.0
+        @assert amt(s_r).val >= 0.0
+        @assert NAM > ""
+        @assert FOR > ""
+        # Returns
+        new{𝗽,𝘅,𝗯}(NAM, FOR, mAmt{𝗽,𝘅}(__M), cpAmt{𝗽,𝘅}(__c),
+                             sysT{𝗽,𝘅}(T_r),  sAmt{𝗽,𝘅}(s_r))
+    end
 end
 
 # TODO: inner constructor enforcing M, c > 0
