@@ -134,8 +134,8 @@ the substance with specific heat modeled by `x`, making base conversion only whe
 (cp(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::cpAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = x.c
 
 # Particular gas cp values: w/ conversion
-(cp(x::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MO})::cpAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = x.c * x.M
-(cp(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MA})::cpAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = x.c / x.M
+(cp(x::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MO})::cpAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = cp(x.c * x.M)
+(cp(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MA})::cpAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = cp(x.c / x.M)
 
 # Particular gas cp value: default base fallback
 cp(x::nobleGasHeat) = cp(x, DEF[:IB]) # fallback
@@ -212,23 +212,70 @@ temperatures of `Ti` and `Tf`, respectively.
 (Δu(x::nobleGasHeat{𝗽,𝘅,𝗯},
     Ti::sysT{𝗽,𝘅},
     Tf::sysT{𝗽,𝘅},
-    B::Type{MA})::ΔeAmt{𝗽,𝘅,MA}) where {𝗽,𝘅,𝗯} = begin
-    cv(x, B) * (Tf - Ti)
+    B::Type{<:IntBase} = DEF[:IB])::ΔeAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    Δe(cv(x, B) * (Tf - Ti))
 end
 
-(Δu(x::nobleGasHeat{𝗽,𝘅,𝗯},
-    Ti::sysT{𝗽,𝘅},
-    Tf::sysT{𝗽,𝘅},
-    B::Type{MO})::ΔeAmt{𝗽,𝘅,MO}) where {𝗽,𝘅,𝗯} = begin
-    cv(x, B) * (Tf - Ti)
+
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #            u: Particular gas specific internal energy            #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+import EngThermBase: u
+
+"""
+`(u(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    theT::sysT{𝗽,𝘅},
+    B::Type{<:IntBase}=DEF[:IB])::uAmt{𝗽,𝘅,B})
+`\n
+"""
+(u(x::nobleGasHeat{𝗽,𝘅,𝗯},
+   theT::sysT{𝗽,𝘅},
+   B::Type{<:IntBase}=DEF[:IB])::uAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    u(Δu(x, Tref(x), theT, B))
 end
 
-(Δu(x::nobleGasHeat{𝗽,𝘅,𝗯},
+
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #        Δh: Particular gas variation of specific enthalpy         #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+"""
+`(Δh(x::nobleGasHeat{𝗽,𝘅,𝗯},
+     Ti::sysT{𝗽,𝘅},
+     Tf::sysT{𝗽,𝘅},
+     B::Type{<:IntBase} = DEF[:IB])::ΔeAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
+Returns the particular gas variation in specific enthalpy in the specified or default base for
+the substance with specific heat modeled by `x`, for process with initial and final temperatures
+of `Ti` and `Tf`, respectively.
+"""
+(Δh(x::nobleGasHeat{𝗽,𝘅,𝗯},
     Ti::sysT{𝗽,𝘅},
     Tf::sysT{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::ΔeAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    cv(x, B) * (Tf - Ti)
+    Δe(cp(x, B) * (Tf - Ti))
 end
 
 
-# TODO: u, h, s°, Δu, Δh, Δs°
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #               h: Particular gas specific enthalpy                #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+import EngThermBase: h
+
+"""
+`(h(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    theT::sysT{𝗽,𝘅},
+    B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B})
+`\n
+"""
+(h(x::nobleGasHeat{𝗽,𝘅,𝗯},
+   theT::sysT{𝗽,𝘅},
+   B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    h(Δh(x, Tref(x), theT, B))
+end
+
+
+
+
+# TODO: s°, Δs°
