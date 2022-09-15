@@ -10,6 +10,9 @@ struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
     c::cpAmt{𝗽,𝘅,𝗯}     # The precision- exactness- base- parametric cp
 end
 
+# TODO: inner constructor enforcing M, c > 0
+# TODO: add Tref, sref
+
 # Type exporting
 export nobleGasHeat
 
@@ -153,4 +156,4 @@ modeled by `x`, without conversions. For ideal gases, \$k = γ\$.
 (k(x::nobleGasHeat{𝗽,𝘅,𝗯})::kAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k(γ(x))  # γ fallback
 
 
-
+# TODO: u, h, s°, Δu, Δh, Δs°
