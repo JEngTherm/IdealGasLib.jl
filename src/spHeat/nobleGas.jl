@@ -19,8 +19,10 @@ struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
                  FOR::AbstractString,
                  __M::mAmt{𝗽𝗔,𝘅𝗔,MO},
                  __c::cpAmt{𝗽𝗕,𝘅𝗕,𝗯},
-                 T_r::sysT{𝗽𝗖,𝘅𝗖},
-                 s_r::sAmt{𝗽𝗗,𝘅𝗗,𝗯}) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗽𝗖,𝘅𝗖,𝗽𝗗,𝘅𝗗,𝗯} = begin
+                 T_r::sysT{𝗽𝗖,𝘅𝗖}   = T(promote_type(𝗽𝗔, 𝗽𝗕), promote_type(𝘅𝗔, 𝘅𝗕)),
+                 s_r::sAmt{𝗽𝗗,𝘅𝗗,𝗯} = sAmt{promote_type(𝗽𝗔, 𝗽𝗕),promote_type(𝘅𝗔, 𝘅𝗕),𝗯}(
+                                           zero(promote_type(𝗽𝗔, 𝗽𝗕)))
+                ) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗽𝗖,𝘅𝗖,𝗽𝗗,𝘅𝗗,𝗯} = begin
         # Precision and Exactness promotion
         𝗽 = promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖, 𝗽𝗗)
         𝘅 = promote_type(𝘅𝗔, 𝘅𝗕, 𝘅𝗖, 𝘅𝗗)
@@ -37,9 +39,6 @@ struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
     end
 end
 
-# TODO: inner constructor enforcing M, c > 0
-# TODO: add Tref, sref
-
 # Type exporting
 export nobleGasHeat
 
@@ -50,7 +49,7 @@ Base.show(io::IO, x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begi
     if DEF[:pprint]
         print(io,
             "$(string(deco(x))) for $(x.form): ",
-            "($(x.c)) ($(x.M))"
+            "($(x.c)) ($(x.M)) ($(x.Tref)) ($(x.sref))"
         )
     else
         Base.show_default(io, x)
