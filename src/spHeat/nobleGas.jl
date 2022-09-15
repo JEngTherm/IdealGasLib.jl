@@ -104,9 +104,24 @@ import EngThermBase: γ
 
 """
 `(γ(x::nobleGasHeat{𝗽,𝘅,𝗯})::γAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
-Returns the substance specific heat ratio for the substance with specific heat modeled by `x`,
-without conversions.
+Returns the particular gas specific heat ratio for the substance with specific heat modeled by
+`x`, without conversions.
 """
 (γ(x::nobleGasHeat{𝗽,𝘅,𝗯})::γAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = γ(cp(x, 𝗯)/cv(x, 𝗯))
+
+
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #         k: Particular gas isentropic expansion exponent          #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+import EngThermBase: k
+
+"""
+`(k(x::nobleGasHeat{𝗽,𝘅,𝗯})::kAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
+Returns the particular gas isentropic expansion exponent for the substance with specific heat
+modeled by `x`, without conversions. For ideal gases, \$k = γ\$.
+"""
+(k(x::nobleGasHeat{𝗽,𝘅,𝗯})::kAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k(γ(x))  # γ fallback
+
 
 
