@@ -112,10 +112,14 @@ import EngThermBase: R
 # Particular gas constant -- function syntax thanks to
 # https://stackoverflow.com/a/65890762/4038337
 """
-`(R(x::nobleGasHeat{𝗽,𝘅})::RAmt{𝗽,𝘅,MA}) where {𝗽,𝘅}`\n
-Returns the particular gas constant for the substance with specific heat modeled by `x`.
+`(R(x::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::RAmt{𝗽,𝘅,B}) where {𝗽,𝘅}`\n
+Returns the particular gas constant for the substance with specific heat modeled by `x` in the
+default or specified base.
 """
-(R(x::nobleGasHeat{𝗽,𝘅})::RAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = R(𝗽, 𝘅) / x.M
+(R(x::nobleGasHeat{𝗽,𝘅}, B::Type{MA})::RAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = R(𝗽, 𝘅) / x.M
+(R(x::nobleGasHeat{𝗽,𝘅}, B::Type{MO})::RAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = R(𝗽, 𝘅)
+
+(R(x::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::RAmt{𝗽,𝘅,B}) where {𝗽,𝘅} = R(x, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -272,10 +276,28 @@ import EngThermBase: h
 (h(x::nobleGasHeat{𝗽,𝘅,𝗯},
    theT::sysT{𝗽,𝘅},
    B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    h(Δh(x, Tref(x), theT, B))
+    h(Δh(x, Tref(x), theT, B) + R(x, B) * Tref(x))
 end
 
 
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #    Δs°: Particular gas variation of ideal gas partial entropy    #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+"""
+`(Δs°(x::nobleGasHeat{𝗽,𝘅,𝗯},
+      Ti::sysT{𝗽,𝘅},
+      Tf::sysT{𝗽,𝘅},
+      B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
+Returns the particular gas variation in specific entropy in the specified or default base for
+the substance with specific heat modeled by `x`, for process with initial and final temperatures
+of `Ti` and `Tf`, respectively.
+"""
+(Δs°(x::nobleGasHeat{𝗽,𝘅,𝗯},
+     Ti::sysT{𝗽,𝘅},
+     Tf::sysT{𝗽,𝘅},
+     B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    Δs(cp(x, B) * log(Tf/Ti))
+end
 
 
-# TODO: s°, Δs°
