@@ -36,7 +36,7 @@ import EngThermBase: R
 
 # Particular gas constant
 """
-`R(x::nobleGasHeat{𝗽,𝘅})::RAmt{𝗽,𝘅,MA} where {𝗽,𝘅}`\n
+`(R(x::nobleGasHeat{𝗽,𝘅})::RAmt{𝗽,𝘅,MA}) where {𝗽,𝘅}`\n
 Returns the particular gas constant for the substance with specific heat modeled by `x`.
 """
 (R(x::nobleGasHeat{𝗽,𝘅})::RAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = R(𝗽, 𝘅) / x.M
