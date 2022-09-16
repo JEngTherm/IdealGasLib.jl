@@ -159,7 +159,7 @@ the substance with specific heat modeled by `x`, making base conversion only whe
 (cv(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::cvAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = cv(x.c - R(x, MO))
 
 # Particular gas cv values: w/ base conversion
-(cv(x::nobleGasHeat{𝗽,𝘅,𝗯},
+(cv(x::nobleGasHeat{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::cvAmt{𝗽,𝘅,B}) where {𝗽,𝘅} = begin
     cv(cp(x, B) - R(x, B))
 end
