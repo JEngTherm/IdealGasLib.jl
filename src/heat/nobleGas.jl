@@ -251,6 +251,8 @@ import EngThermBase: u
     theT::sysT{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::uAmt{𝗽,𝘅,B})
 `\n
+Returns the particular gas specific internal energy in the specified or default
+base for the substance with specific heat modeled by `x`, for states with temperature `theT`.
 """
 (u(x::nobleGasHeat{𝗽,𝘅,𝗯},
    theT::sysT{𝗽,𝘅},
@@ -294,6 +296,8 @@ import EngThermBase: h
     theT::sysT{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B})
 `\n
+Returns the particular gas specific enthalpy in the specified or default base for the substance
+with specific heat modeled by `x`, for states with temperature `theT`.
 """
 (h(x::nobleGasHeat{𝗽,𝘅,𝗯},
    theT::sysT{𝗽,𝘅},
@@ -303,7 +307,7 @@ end
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
-    #    Δs°: Particular gas variation of ideal gas partial entropy    #
+    # Δs°: Particular gas variation of ideal gas partial spec. entropy #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
@@ -311,9 +315,9 @@ end
       Ti::sysT{𝗽,𝘅},
       Tf::sysT{𝗽,𝘅},
       B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
-Returns the particular gas variation in specific entropy in the specified or default base for
-the substance with specific heat modeled by `x`, for process with initial and final temperatures
-of `Ti` and `Tf`, respectively.
+Returns the particular gas variation in ideal gas partial specific entropy in the specified or
+default base for the substance with specific heat modeled by `x`, for process with initial and
+final temperatures of `Ti` and `Tf`, respectively.
 """
 (Δs°(x::nobleGasHeat{𝗽,𝘅,𝗯},
      Ti::sysT{𝗽,𝘅},
@@ -335,6 +339,8 @@ Ds0 = Δs°
      theT::sysT{𝗽,𝘅},
      B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B})
 `\n
+Returns the particular gas specific ideal gas partial entropy in the specified or default base
+for the substance with specific heat modeled by `x`, for states with temperature `theT`.
 """
 (s°(x::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::sysT{𝗽,𝘅},
@@ -342,11 +348,39 @@ Ds0 = Δs°
     s(Δs°(x, Tref(x), theT, B))
 end
 
+
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #         Δs: Particular gas variation of specific entropy         #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+"""
+`(Δs(x::nobleGasHeat{𝗽,𝘅,𝗯},
+     Ti::sysT{𝗽,𝘅},
+     Tf::sysT{𝗽,𝘅},
+     Pi::sysP{𝗽,𝘅},
+     Pf::sysP{𝗽,𝘅},
+     B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
+Returns the particular gas variation in specific entropy in the specified or default base for
+the substance with specific heat modeled by `x`, for process with initial and final temperatures
+and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively.
+"""
+(Δs(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    Ti::sysT{𝗽,𝘅},
+    Tf::sysT{𝗽,𝘅},
+    Pi::sysP{𝗽,𝘅},
+    Pf::sysP{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    Δs(cp(x, B) * log(Tf/Ti) - R(x, B) * log(Pf/Pi))
+end
+
 # Alias
-s0 = s°
+Ds = Δs
 
 
-# Alias exports
-export Du, Dh, Ds0, s0
+#----------------------------------------------------------------------------------------------#
+#                                        Alias exports                                         #
+#----------------------------------------------------------------------------------------------#
+
+export Du, Dh, Ds0, s0, Ds
 
 
