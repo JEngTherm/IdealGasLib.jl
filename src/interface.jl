@@ -20,6 +20,11 @@ Function to return a particular substance's reference state's temperature.
 function Tref end
 
 """
+Function to return a particular substance's reference state's pressure.
+"""
+function Pref end
+
+"""
 Function to return a particular substance's reference state's specific entropy.
 """
 function sref end
@@ -36,6 +41,6 @@ function Δh end
 
 
 # Interface exports
-export name, form, Tref, sref, Δu, Δh, Δs°
+export name, form, Tref, Pref, sref, Δu, Δh, Δs°
 
 
