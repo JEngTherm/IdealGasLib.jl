@@ -2,6 +2,8 @@
 #                        Noble Gas Specific Heat Model for Ideal Gases                         #
 #----------------------------------------------------------------------------------------------#
 
+import Base: show
+
 # Type declaration
 struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
     name::String        # Substance name -- that has the (M, c) values
