@@ -57,8 +57,8 @@ deco(x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = Symbol("noble-cp(
 Base.show(io::IO, x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
     if DEF[:pprint]
         print(io,
-            "$(string(deco(x))) for $(x.form): ",
-            "($(x.c)) ($(x.M)) ($(x.Tref)) ($(x.sref))"
+            "$(string(deco(x))): ",
+            "($(x.c)) ($(x.M)) ($(x.Tref)) ($(x.Pref)) ($(x.sref))"
         )
     else
         Base.show_default(io, x)
@@ -84,6 +84,13 @@ Returns a particular gas's reference state temperature for the substance with sp
 modeled by `x`.
 """
 (Tref(x::nobleGasHeat{𝗽,𝘅})::sysT{𝗽,𝘅}) where {𝗽,𝘅} = x.Tref
+
+"""
+`(Pref(x::nobleGasHeat{𝗽,𝘅})::sysP{𝗽,𝘅}) where {𝗽,𝘅}`\n
+Returns a particular gas's reference state pressure for the substance with specific heat modeled
+by `x`.
+"""
+(Pref(x::nobleGasHeat{𝗽,𝘅})::sysP{𝗽,𝘅}) where {𝗽,𝘅} = x.Pref
 
 """
 `(sref(x::nobleGasHeat{𝗽,𝘅,𝗯})::sAmt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯}`\n
