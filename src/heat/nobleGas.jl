@@ -350,6 +350,26 @@ and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively.
     Δs(cp(x, B) * log(Tf/Ti) - R(x, B) * log(Pf/Pi))
 end
 
+"""
+`(Δs(x::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
+    Ti::sysT{𝗽,𝘅},
+    Tf::sysT{𝗽,𝘅},
+    vi::vAmt{𝗽,𝘅,𝗯𝗕},
+    vf::vAmt{𝗽,𝘅,𝗯𝗕},
+    B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯𝗔,𝗯𝗕}`\n
+Returns the particular gas variation in specific entropy in the specified or default base for
+the substance with specific heat modeled by `x`, for process with initial and final temperatures
+and specific volumes of `Ti` and `Tf`, and `vi` and `vf`, respectively.
+"""
+(Δs(x::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
+    Ti::sysT{𝗽,𝘅},
+    Tf::sysT{𝗽,𝘅},
+    vi::vAmt{𝗽,𝘅,𝗯𝗕},
+    vf::vAmt{𝗽,𝘅,𝗯𝗕},
+    B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯𝗔,𝗯𝗕} = begin
+    Δs(cv(x, B) * log(Tf/Ti) + R(x, B) * log(vf/vi))
+end
+
 # Alias
 Ds = Δs
 
