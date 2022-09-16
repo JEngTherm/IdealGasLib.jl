@@ -11,10 +11,11 @@ struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
     M::mAmt{𝗽,𝘅,MO}     # The precision- exactness- parametric molar mass
     c::cpAmt{𝗽,𝘅,𝗯}     # The precision- exactness- base- parametric cp
     Tref::sysT{𝗽,𝘅}     # The reference state temperature
+    Pref::sysP{𝗽,𝘅}     # The reference state pressure
     sref::sAmt{𝗽,𝘅,𝗯}   # The reference state specific entropy
     # Inner copy constructor
     nobleGasHeat(x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
-        new{𝗽,𝘅,𝗯}(x.name, x.form, x.M, x.c, x.Tref, x.sref)
+        new{𝗽,𝘅,𝗯}(x.name, x.form, x.M, x.c, x.Tref, x.Pref, x.sref)
     end
     # Inner checking & promoting constructor
     nobleGasHeat(NAM::AbstractString,
@@ -22,22 +23,28 @@ struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
                  __M::mAmt{𝗽𝗔,𝘅𝗔,MO},
                  __c::cpAmt{𝗽𝗕,𝘅𝗕,𝗯},
                  T_r::sysT{𝗽𝗖,𝘅𝗖}   = T(promote_type(𝗽𝗔, 𝗽𝗕), promote_type(𝘅𝗔, 𝘅𝗕)),
-                 s_r::sAmt{𝗽𝗗,𝘅𝗗,𝗯} = sAmt{promote_type(𝗽𝗔, 𝗽𝗕),promote_type(𝘅𝗔, 𝘅𝗕),𝗯}(
+                 P_r::sysP{𝗽𝗗,𝘅𝗗}   = P(promote_type(𝗽𝗔, 𝗽𝗕), promote_type(𝘅𝗔, 𝘅𝗕)),
+                 s_r::sAmt{𝗽𝗘,𝘅𝗘,𝗯} = sAmt{promote_type(𝗽𝗔, 𝗽𝗕),promote_type(𝘅𝗔, 𝘅𝗕),𝗯}(
                                            zero(promote_type(𝗽𝗔, 𝗽𝗕)))
-                ) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗽𝗖,𝘅𝗖,𝗽𝗗,𝘅𝗗,𝗯} = begin
+                ) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗽𝗖,𝘅𝗖,𝗽𝗗,𝘅𝗗,𝗽𝗘,𝘅𝗘,𝗯} = begin
         # Precision and Exactness promotion
-        𝗽 = promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖, 𝗽𝗗)
-        𝘅 = promote_type(𝘅𝗔, 𝘅𝗕, 𝘅𝗖, 𝘅𝗗)
+        𝗽 = promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖, 𝗽𝗗, 𝗽𝗘)
+        𝘅 = promote_type(𝘅𝗔, 𝘅𝗕, 𝘅𝗖, 𝘅𝗗, 𝘅𝗘)
         # Checks
         @assert amt(__M).val >  0.0
         @assert amt(__c).val >  0.0
         @assert amt(T_r).val >  0.0
+        @assert amt(P_r).val >  0.0
         @assert amt(s_r).val >= 0.0
         @assert NAM > ""
         @assert FOR > ""
         # Returns
-        new{𝗽,𝘅,𝗯}(NAM, FOR, mAmt{𝗽,𝘅}(__M), cpAmt{𝗽,𝘅}(__c),
-                             sysT{𝗽,𝘅}(T_r),  sAmt{𝗽,𝘅}(s_r))
+        new{𝗽,𝘅,𝗯}(NAM, FOR,
+                   mAmt{𝗽,𝘅}(__M),
+                   cpAmt{𝗽,𝘅}(__c),
+                   sysT{𝗽,𝘅}(T_r),
+                   sysP{𝗽,𝘅}(P_r),
+                   sAmt{𝗽,𝘅}(s_r))
     end
 end
 
@@ -222,6 +229,9 @@ temperatures of `Ti` and `Tf`, respectively.
     Δe(cv(x, B) * (Tf - Ti))
 end
 
+# Alias
+Du = Δu
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #            u: Particular gas specific internal energy            #
@@ -262,6 +272,9 @@ of `Ti` and `Tf`, respectively.
     Δe(cp(x, B) * (Tf - Ti))
 end
 
+# Alias
+Dh = Δh
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #               h: Particular gas specific enthalpy                #
@@ -301,5 +314,8 @@ of `Ti` and `Tf`, respectively.
      B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
     Δs(cp(x, B) * log(Tf/Ti))
 end
+
+# Alias
+Ds0 = Δs°
 
 

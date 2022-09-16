@@ -36,6 +36,6 @@ function Δh end
 
 
 # Interface exports
-export name, form, Tref, sref, Δu, Δh
+export name, form, Tref, sref, Δu, Δh, Δs°
 
 
