@@ -6,8 +6,6 @@ import Base: show
 
 # Type declaration
 struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
-    name::String        # Substance name -- that has the (M, c) values
-    form::String        # Substance formula as a String
     M::mAmt{𝗽,𝘅,MO}     # The precision- exactness- parametric molar mass
     c::cpAmt{𝗽,𝘅,𝗯}     # The precision- exactness- base- parametric cp
     Tref::sysT{𝗽,𝘅}     # The reference state temperature
@@ -15,12 +13,10 @@ struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
     sref::sAmt{𝗽,𝘅,𝗯}   # The reference state specific entropy
     # Inner copy constructor
     nobleGasHeat(x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
-        new{𝗽,𝘅,𝗯}(x.name, x.form, x.M, x.c, x.Tref, x.Pref, x.sref)
+        new{𝗽,𝘅,𝗯}(x.M, x.c, x.Tref, x.Pref, x.sref)
     end
     # Inner checking & promoting constructor
-    nobleGasHeat(NAM::AbstractString,
-                 FOR::AbstractString,
-                 __M::mAmt{𝗽𝗔,𝘅𝗔,MO},
+    nobleGasHeat(__M::mAmt{𝗽𝗔,𝘅𝗔,MO},
                  __c::cpAmt{𝗽𝗕,𝘅𝗕,𝗯},
                  T_r::sysT{𝗽𝗖,𝘅𝗖}   = T(promote_type(𝗽𝗔, 𝗽𝗕), promote_type(𝘅𝗔, 𝘅𝗕)),
                  P_r::sysP{𝗽𝗗,𝘅𝗗}   = P(promote_type(𝗽𝗔, 𝗽𝗕), promote_type(𝘅𝗔, 𝘅𝗕)),
@@ -36,11 +32,8 @@ struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
         @assert amt(T_r).val >  0.0
         @assert amt(P_r).val >  0.0
         @assert amt(s_r).val >= 0.0
-        @assert NAM > ""
-        @assert FOR > ""
         # Returns
-        new{𝗽,𝘅,𝗯}(NAM, FOR,
-                   mAmt{𝗽,𝘅}(__M),
+        new{𝗽,𝘅,𝗯}(mAmt{𝗽,𝘅}(__M),
                    cpAmt{𝗽,𝘅}(__c),
                    sysT{𝗽,𝘅}(T_r),
                    sysP{𝗽,𝘅}(P_r),
@@ -66,17 +59,6 @@ Base.show(io::IO, x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begi
 end
 
 # Type plain info access functions
-"""
-`name(x::nobleGasHeat)::String`\n
-Returns a particular gas's name for the substance with specific heat modeled by `x`.
-"""
-name(x::nobleGasHeat)::String = x.name
-
-"""
-`form(x::nobleGasHeat)::String`\n
-Returns a particular gas's chemical formula for the substance with specific heat modeled by `x`.
-"""
-form(x::nobleGasHeat)::String = x.form
 
 """
 `(Tref(x::nobleGasHeat{𝗽,𝘅})::sysT{𝗽,𝘅}) where {𝗽,𝘅}`\n
@@ -173,19 +155,14 @@ import EngThermBase: cv
 Returns the particular gas constant-volume specific heat in the default or specified base for
 the substance with specific heat modeled by `x`, making base conversion only when necessary.
 """
-(cv(x::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::cvAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = cv(x.c - R(x))
-(cv(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::cvAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = cv(x.c - R(𝗽, 𝘅))
+(cv(x::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::cvAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = cv(x.c - R(x, MA))
+(cv(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::cvAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = cv(x.c - R(x, MO))
 
 # Particular gas cv values: w/ base conversion
-(cv(x::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MO})::cvAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = begin
-    cv(x.c * x.M - R(𝗽, 𝘅))
+(cv(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    B::Type{<:IntBase} = DEF[:IB])::cvAmt{𝗽,𝘅,B}) where {𝗽,𝘅} = begin
+    cv(cp(x, B) - R(x, B))
 end
-(cv(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MA})::cvAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = begin
-    cv((x.c - R(𝗽, 𝘅)) / x.M)
-end
-
-# Particular gas cv value: default base fallback
-cv(x::nobleGasHeat) = cv(x, DEF[:IB]) # fallback
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
