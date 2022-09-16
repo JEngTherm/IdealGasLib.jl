@@ -9,6 +9,6 @@ using Reexport
 include("interface.jl")
 
 # Includes - specific heat models for ideal gases
-include("spHeat/nobleGas.jl")
+include("heat/nobleGas.jl")
 
 end # module
