@@ -39,8 +39,18 @@ Function to return a particular substance's variation of specific enthalpy.
 """
 function Δh end
 
+"""
+Function to return a particular substance's variation of specific ideal gas partial entropy.
+"""
+function Δs° end
+
+"""
+Function to return a particular substance's specific ideal gas partial entropy.
+"""
+function s° end
+
 
 # Interface exports
-export name, form, Tref, Pref, sref, Δu, Δh, Δs°
+export name, form, Tref, Pref, sref, Δu, Δh, Δs°, s°
 
 
