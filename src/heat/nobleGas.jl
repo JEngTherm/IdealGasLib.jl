@@ -226,8 +226,7 @@ import EngThermBase: u
 """
 `(u(x::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::sysT{𝗽,𝘅},
-    B::Type{<:IntBase}=DEF[:IB])::uAmt{𝗽,𝘅,B})
-`\n
+    B::Type{<:IntBase}=DEF[:IB])::uAmt{𝗽,𝘅,B})`\n
 Returns the particular gas specific internal energy in the specified or default
 base for the substance with specific heat modeled by `x`, for states with temperature `theT`.
 """
@@ -271,8 +270,7 @@ import EngThermBase: h
 """
 `(h(x::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::sysT{𝗽,𝘅},
-    B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B})
-`\n
+    B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B})`\n
 Returns the particular gas specific enthalpy in the specified or default base for the substance
 with specific heat modeled by `x`, for states with temperature `theT`.
 """
@@ -314,14 +312,13 @@ Ds0 = Δs°
 """
 `(s°(x::nobleGasHeat{𝗽,𝘅,𝗯},
      theT::sysT{𝗽,𝘅},
-     B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B})
-`\n
+     B::Type{<:IntBase}=DEF[:IB])::sAmt{𝗽,𝘅,B})`\n
 Returns the particular gas specific ideal gas partial entropy in the specified or default base
 for the substance with specific heat modeled by `x`, for states with temperature `theT`.
 """
 (s°(x::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::sysT{𝗽,𝘅},
-    B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    B::Type{<:IntBase}=DEF[:IB])::sAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
     EΘB.s(Δs°(x, Tref(x), theT, B))
 end
 
@@ -350,6 +347,15 @@ and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively.
     Pf::sysP{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
     EΘB.Δs(cp(x, B) * log(Tf/Ti) - R(x, B) * log(Pf/Pi))
+end
+
+(Δs(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    Pi::sysP{𝗽,𝘅},
+    Pf::sysP{𝗽,𝘅},
+    Ti::sysT{𝗽,𝘅},
+    Tf::sysT{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    Δs(x, Ti, Tf, Pi, Pf, B)
 end
 
 """
@@ -385,8 +391,8 @@ import EngThermBase: s
 """
 `(s(x::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::sysT{𝗽,𝘅},
-    B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B})
-`\n
+    theP::sysP{𝗽,𝘅},
+    B::Type{<:IntBase}=DEF[:IB])::sAmt{𝗽,𝘅,B})`\n
 Returns the particular gas specific entropy in the specified or default base for the substance
 with specific heat modeled by `x`, in the specified thermodynamic state (`theT`, `theP`).
 """
@@ -402,6 +408,24 @@ end
    theT::sysT{𝗽,𝘅},
    B::Type{<:IntBase}=DEF[:IB])::sAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
     s(x, theT, theP, B)
+end
+
+
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #               Pr: Particular gas relative pressure               #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+import EngThermBase: Pr
+
+"""
+`(Pr(x::nobleGasHeat{𝗽,𝘅,𝗯},
+     theT::sysT{𝗽,𝘅})::PrAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
+Returns the particular gas specific entropy in the specified or default base for the substance
+with specific heat modeled by `x`, in the specified thermodynamic state (`theT`, `theP`).
+"""
+(Pr(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    theT::sysT{𝗽,𝘅})::PrAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = begin
+    EΘB.Pr(exp(s°(x, theT, 𝗯) / R(x, 𝗯)))
 end
 
 
