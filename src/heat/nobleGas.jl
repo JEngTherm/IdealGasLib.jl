@@ -376,6 +376,36 @@ end
 Ds = Δs
 
 
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #                s: Particular gas specific entropy                #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+import EngThermBase: s
+
+"""
+`(s(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    theT::sysT{𝗽,𝘅},
+    B::Type{<:IntBase}=DEF[:IB])::hAmt{𝗽,𝘅,B})
+`\n
+Returns the particular gas specific entropy in the specified or default base for the substance
+with specific heat modeled by `x`, in the specified thermodynamic state (`theT`, `theP`).
+"""
+(s(x::nobleGasHeat{𝗽,𝘅,𝗯},
+   theT::sysT{𝗽,𝘅},
+   theP::sysP{𝗽,𝘅},
+   B::Type{<:IntBase}=DEF[:IB])::sAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    EΘB.s(Δs(x, Tref(x), theT, Pref(x), theP, B))
+end
+
+(s(x::nobleGasHeat{𝗽,𝘅,𝗯},
+   theP::sysP{𝗽,𝘅},
+   theT::sysT{𝗽,𝘅},
+   B::Type{<:IntBase}=DEF[:IB])::sAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
+    s(x, theT, theP, B)
+end
+
+
+
 #----------------------------------------------------------------------------------------------#
 #                                        Alias exports                                         #
 #----------------------------------------------------------------------------------------------#
