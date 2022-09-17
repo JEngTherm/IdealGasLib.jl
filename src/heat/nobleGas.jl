@@ -420,12 +420,30 @@ import EngThermBase: Pr
 """
 `(Pr(x::nobleGasHeat{𝗽,𝘅,𝗯},
      theT::sysT{𝗽,𝘅})::PrAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
-Returns the particular gas specific entropy in the specified or default base for the substance
-with specific heat modeled by `x`, in the specified thermodynamic state (`theT`, `theP`).
+Returns the particular gas relative pressure for the substance with specific heat modeled by
+`x`, in the specified thermodynamic temperature `theT`.
 """
 (Pr(x::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::sysT{𝗽,𝘅})::PrAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = begin
     EΘB.Pr(exp(s°(x, theT, 𝗯) / R(x, 𝗯)))
+end
+
+
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #                vr: Particular gas relative volume                #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+import EngThermBase: vr
+
+"""
+`(vr(x::nobleGasHeat{𝗽,𝘅,𝗯},
+     theT::sysT{𝗽,𝘅})::vrAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
+Returns the particular gas relative volume for the substance with specific heat modeled by `x`,
+in the specified thermodynamic temperature `theT`.
+"""
+(vr(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    theT::sysT{𝗽,𝘅})::vrAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = begin
+    EΘB.vr(theT * β(ℯ) / Pr(x, theT))
 end
 
 
