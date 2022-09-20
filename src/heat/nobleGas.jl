@@ -378,6 +378,15 @@ and specific volumes of `Ti` and `Tf`, and `vi` and `vf`, respectively.
     EΘB.Δs(cv(x, B) * log(Tf/Ti) + R(x, B) * log(vf/vi))
 end
 
+(Δs(x::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
+    vi::vAmt{𝗽,𝘅,𝗯𝗕},
+    vf::vAmt{𝗽,𝘅,𝗯𝗕},
+    Ti::sysT{𝗽,𝘅},
+    Tf::sysT{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯𝗔,𝗯𝗕} = begin
+    Δs(x, Ti, Tf, vi, vf, B)
+end
+
 # Alias
 Ds = Δs
 
