@@ -384,7 +384,7 @@ end
     Ti::sysT{𝗽,𝘅},
     Tf::sysT{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::ΔsAmt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯𝗔,𝗯𝗕} = begin
-    Δs(x, Ti, Tf, vi, vf, B)
+    Δs(x, Ti, Tf, vi, vf, B)    # fallsback
 end
 
 # Alias
