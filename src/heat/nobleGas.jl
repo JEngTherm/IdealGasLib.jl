@@ -443,6 +443,7 @@ in the specified thermodynamic temperature `theT`.
 """
 (vr(x::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::sysT{𝗽,𝘅})::vrAmt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = begin
+    # The β(ℯ) term is a scale factor to render the numerator dimensionless
     EΘB.vr(theT * β(ℯ) / Pr(x, theT))
 end
 
