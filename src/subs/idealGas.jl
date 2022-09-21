@@ -43,3 +43,21 @@ end
 
 # Type plain info access functions
 
+"""
+`(Tref(GAS::idealGas{𝗽,𝘅})::sysT{𝗽,𝘅}) where {𝗽,𝘅}`\n
+Returns a particular ideal `GAS`'s reference state temperature.
+"""
+(Tref(GAS::idealGas{𝗽,𝘅})::sysT{𝗽,𝘅}) where {𝗽,𝘅} = Tref(GAS.heat)      # fallback
+
+"""
+`(Pref(GAS::idealGas{𝗽,𝘅})::sysP{𝗽,𝘅}) where {𝗽,𝘅}`\n
+Returns a particular ideal `GAS`'s reference state pressure.
+"""
+(Pref(GAS::idealGas{𝗽,𝘅})::sysP{𝗽,𝘅}) where {𝗽,𝘅} = Pref(GAS.heat)      # fallback
+
+"""
+`(sref(GAS::idealGas{𝗽,𝘅,𝗯})::sAmt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯}`\n
+Returns a particular ideal `GAS`'s reference state specific entropy in the base `𝗯`.
+"""
+(sref(GAS::idealGas{𝗽,𝘅,𝗯})::sAmt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = sref(GAS.heat)      # fallback
+
