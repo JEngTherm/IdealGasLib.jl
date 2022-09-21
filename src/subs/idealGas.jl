@@ -27,3 +27,19 @@ end
 # Type exporting
 export idealGas
 
+# Type displaying
+deco(x::idealGas) = Symbol("ideal gas")
+
+Base.show(io::IO, x::idealGas{𝗽,𝘅,𝗛}) where {𝗽,𝘅,𝗛} = begin
+    if DEF[:pprint]
+        print(io,
+            "$(x.name) $(string(deco(x))) \"$(x.form)\" ",
+            "with $(x.heat)"
+        )
+    else
+        Base.show_default(io, x)
+    end
+end
+
+# Type plain info access functions
+
