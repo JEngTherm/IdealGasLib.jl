@@ -24,5 +24,6 @@ struct idealGas{𝗽<:PREC,𝘅<:EXAC,𝗛<:Heat} <: Substance{𝗽,𝘅}
     end
 end
 
+# Type exporting
 export idealGas
 
