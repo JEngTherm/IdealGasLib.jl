@@ -81,6 +81,12 @@ modeled by `x`.
 """
 (sref(x::nobleGasHeat{𝗽,𝘅,𝗯})::sAmt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = x.sref
 
+(sref(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MA})::sAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = x.sref / x.M
+(sref(x::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MO})::sAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = x.sref * x.M
+
+(sref(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::sAmt{𝗽,𝘅,MO}) where {𝗽,𝘅} = x.sref
+(sref(x::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::sAmt{𝗽,𝘅,MA}) where {𝗽,𝘅} = x.sref
+
 
 #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 #                         Basic Ideal Gas Properties from nobleGasHeat                         #
