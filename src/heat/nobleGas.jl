@@ -5,12 +5,12 @@
 import Base: show
 
 # Type declaration
-struct nobleGasHeat{𝗽,𝘅,𝗯<:IntBase} <: ConstHeat{𝗽,𝘅}
-    M::m_amt{𝗽,𝘅,MO}     # The precision- exactness- parametric molar mass
-    c::cpamt{𝗽,𝘅,𝗯}     # The precision- exactness- base- parametric cp
-    Tref::T_amt{𝗽,𝘅}     # The reference state temperature
-    Pref::P_amt{𝗽,𝘅}     # The reference state pressure
-    sref::s_amt{𝗽,𝘅,𝗯}   # The reference state specific entropy
+struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
+    M::m_amt{𝗽,𝘅,MO}        # The precision- exactness- parametric molar mass
+    c::cpamt{𝗽,𝘅,𝗯}         # The precision- exactness- base- parametric cp
+    Tref::T_amt{𝗽,𝘅}        # The reference state temperature
+    Pref::P_amt{𝗽,𝘅}        # The reference state pressure
+    sref::s_amt{𝗽,𝘅,𝗯}      # The reference state specific entropy
     # Inner copy constructor
     nobleGasHeat(x::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
         new{𝗽,𝘅,𝗯}(x.M, x.c, x.Tref, x.Pref, x.sref)
