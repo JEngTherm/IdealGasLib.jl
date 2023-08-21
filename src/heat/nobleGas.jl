@@ -2,7 +2,7 @@
 #                        Noble Gas Specific Heat Model for Ideal Gases                         #
 #----------------------------------------------------------------------------------------------#
 
-import Base: show
+import Base: cp, show # Since :cp is further extended here
 
 # Type declaration
 struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
