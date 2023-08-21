@@ -1,9 +1,10 @@
 # !center 92 | frame 92
 #----------------------------------------------------------------------------------------------#
-#                                    heat/nobleGas.test.jl                                     #
+#                                    subs/idealGas.test.jl                                     #
 #----------------------------------------------------------------------------------------------#
 
-@testset "heat/nobleGas.test.jl                                                   " begin
+@testset "subs/idealGas.test.jl                                                   " begin
     @test ...
 end
+
 
