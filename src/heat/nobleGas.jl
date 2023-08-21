@@ -3,6 +3,7 @@
 #----------------------------------------------------------------------------------------------#
 
 import Base: cp, show # Since :cp is further extended here
+import EngThermBase: deco, m_, R_, cv, ga, k_, ds, s_, Pr, vr
 
 # Type declaration
 struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
@@ -312,6 +313,9 @@ for the substance with specific heat modeled by `x`, for states with temperature
     s_(Δs°(x, Tref(x), theT, B))
 end
 
+# Alias
+s0 = s°
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #         Δs: Particular gas variation of specific entropy         #
@@ -431,8 +435,8 @@ in the specified thermodynamic temperature `theT`.
 """
 (vr(x::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::T_amt{𝗽,𝘅})::vramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = begin
-    # The be(ℯ) term is a scale factor to render the numerator dimensionless
-    vr(theT * be(ℯ) / Pr(x, theT))
+    # The be(𝗽(ℯ)) term is a scale factor to render the numerator dimensionless
+    vr(theT * be(𝗽(ℯ)) / Pr(x, theT))
 end
 
 
