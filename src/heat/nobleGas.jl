@@ -19,10 +19,13 @@ struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
     # Inner checking & promoting constructor
     nobleGasHeat(__M::m_amt{𝗽𝗔,𝘅𝗔,MO},
                  __c::cpamt{𝗽𝗕,𝘅𝗕,𝗯},
-                 T_r::T_amt{𝗽𝗖,𝘅𝗖}   = 𝗧(promote_type(𝗽𝗔, 𝗽𝗕), promote_type(𝘅𝗔, 𝘅𝗕)),
-                 P_r::P_amt{𝗽𝗗,𝘅𝗗}   = 𝗣(promote_type(𝗽𝗔, 𝗽𝗕), promote_type(𝘅𝗔, 𝘅𝗕)),
-                 s_r::s_amt{𝗽𝗘,𝘅𝗘,𝗯} = s_amt{promote_type(𝗽𝗔, 𝗽𝗕),promote_type(𝘅𝗔, 𝘅𝗕),𝗯}(
-                                           zero(promote_type(𝗽𝗔, 𝗽𝗕)))
+                 T_r::T_amt{𝗽𝗖,𝘅𝗖}   = 𝗧(promote_type(𝗽𝗔, 𝗽𝗕),
+                                         promote_type(𝘅𝗔, 𝘅𝗕)),
+                 P_r::P_amt{𝗽𝗗,𝘅𝗗}   = 𝗣(promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖),
+                                         promote_type(𝘅𝗔, 𝘅𝗕, 𝘅𝗖)),
+                 s_r::s_amt{𝗽𝗘,𝘅𝗘,𝗯} = s_amt{promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖, 𝗽𝗗),
+                                             promote_type(𝘅𝗔, 𝘅𝗕, 𝘅𝗖, 𝘅𝗗),𝗯}(
+                                                zero(promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖, 𝗽𝗗)))
                 ) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗽𝗖,𝘅𝗖,𝗽𝗗,𝘅𝗗,𝗽𝗘,𝘅𝗘,𝗯} = begin
         # Precision and Exactness promotion
         𝗽 = promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖, 𝗽𝗗, 𝗽𝗘)
