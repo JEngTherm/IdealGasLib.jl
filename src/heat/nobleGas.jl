@@ -189,6 +189,9 @@ Returns the particular gas specific heat ratio for the substance with specific h
 """
 (ga(x::nobleGasHeat{𝗽,𝘅,𝗯})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(cp(x, 𝗯)/cv(x, 𝗯))
 
+# Temperature specifying method
+(ga(x::nobleGasHeat{𝗽,𝘅,𝗯}, T::T_amt{𝗽,𝘅})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(x)
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #         k: Particular gas isentropic expansion exponent          #
