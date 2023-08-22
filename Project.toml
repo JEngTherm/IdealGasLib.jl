@@ -9,7 +9,7 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
 julia = "^1.6"
-EngThermBase = "0.3"
+EngThermBase = "^0.3.2"
 
 [extras]
 InteractiveUtils = "b77e0a4c-d291-57a0-90e8-8db25a27a240"

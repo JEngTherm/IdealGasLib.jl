@@ -3,7 +3,7 @@
 #----------------------------------------------------------------------------------------------#
 
 import Base: cp, show # Since :cp is further extended here
-import EngThermBase: deco, m_, R_, cv, ga, k_, ds, s_, Pr, vr
+import EngThermBase: deco, m_, R_, cv, ga, k_, u_, h_, ds, s_, Pr, vr
 
 # Type declaration
 struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
