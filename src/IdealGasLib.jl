@@ -4,7 +4,6 @@ module IdealGasLib
 # Imports
 using Reexport
 @reexport using EngThermBase
-EΘB = EngThermBase
 
 # Interface
 include("interface.jl")
