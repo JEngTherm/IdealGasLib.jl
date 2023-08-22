@@ -160,20 +160,22 @@ the substance with specific heat modeled by `x`, making base conversion only whe
     #              cv: Particular gas iso-V specific heat              #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
-# Particular gas cv values: no base conversion
+# Particular gas cv values: type-stable, fallback methods
 """
 `cv(x::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])`\n
 Returns the particular gas constant-volume specific heat in the default or specified base for
 the substance with specific heat modeled by `x`, making base conversion only when necessary.
 """
-(cv(x::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::cvamt{𝗽,𝘅,MA}) where {𝗽,𝘅} = cv(x.c - R_(x, MA))
-(cv(x::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::cvamt{𝗽,𝘅,MO}) where {𝗽,𝘅} = cv(x.c - R_(x, MO))
-
-# Particular gas cv values: w/ base conversion
 (cv(x::nobleGasHeat{𝗽,𝘅},
-    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = begin
-    cv(cp(x, B) - R_(x, B))
-end
+    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(cp(x, B) - R_(x, B))
+
+# Temperature specifying methods
+(cv(x::nobleGasHeat{𝗽,𝘅},
+    T::T_amt{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(x, B)
+(cv(x::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase},
+    T::T_amt{𝗽,𝘅})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(x, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
