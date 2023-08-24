@@ -7,7 +7,7 @@ include("IdealGasLib.test.jl")
 include("interface.test.jl")
 
 # IdealGasLib specific heat model tests
-# include("heat/nobleGas.test.jl")
+include("heat/nobleGas.test.jl")
 
 # idealGasLib substance model tests
 # include("subs/idealGas.test.jl")
