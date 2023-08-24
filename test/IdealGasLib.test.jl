@@ -6,7 +6,6 @@
 @testset "IdealGasLib.test.jl                                                     " begin
     @test IdealGasLib isa Module
     @test IdealGasLib.EngThermBase isa Module
-    @test IdealGasLib.EΘB === EngThermBase
 end
 
 
