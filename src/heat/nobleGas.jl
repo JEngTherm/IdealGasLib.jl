@@ -159,6 +159,14 @@ the substance with specific heat modeled by `x`, making base conversion only whe
     B::Type{<:IntBase},
     T::T_amt{𝗽,𝘅})::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(x, B)
 
+# Fallback temperature specifying methods though T-Pairs.
+(cp(x::nobleGasHeat{𝗽,𝘅},
+    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}},
+    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(x, 𝒫.T, B)
+(cp(x::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase},
+    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}})::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(x, 𝒫.T, B)
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #              cv: Particular gas iso-V specific heat              #
@@ -181,6 +189,14 @@ the substance with specific heat modeled by `x`, making base conversion only whe
     B::Type{<:IntBase},
     T::T_amt{𝗽,𝘅})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(x, B)
 
+# Fallback temperature specifying methods though T-Pairs.
+(cv(x::nobleGasHeat{𝗽,𝘅},
+    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}},
+    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(x, 𝒫.T, B)
+(cv(x::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase},
+    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(x, 𝒫.T, B)
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #             ga: Particular gas specific heat ratio               #
@@ -196,6 +212,10 @@ Returns the particular gas specific heat ratio for the substance with specific h
 # Temperature specifying method
 (ga(x::nobleGasHeat{𝗽,𝘅,𝗯}, T::T_amt{𝗽,𝘅})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(x)
 
+# Fallback temperature specifying methods though T-Pairs.
+(ga(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(x, 𝒫.T)
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #         k: Particular gas isentropic expansion exponent          #
@@ -210,6 +230,10 @@ modeled by `x`, without conversions. For ideal gases, \$k = ga\$.
 
 # Temperature specifying method
 (k_(x::nobleGasHeat{𝗽,𝘅,𝗯}, T::T_amt{𝗽,𝘅})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(x)
+
+# Fallback temperature specifying methods though T-Pairs.
+(k_(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(x, 𝒫.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
