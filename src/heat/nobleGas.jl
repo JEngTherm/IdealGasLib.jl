@@ -161,11 +161,11 @@ the substance with specific heat modeled by `x`, making base conversion only whe
 
 # Fallback temperature specifying methods though T-Pairs.
 (cp(x::nobleGasHeat{𝗽,𝘅},
-    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}},
+    𝒫::hasTPair{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(x, 𝒫.T, B)
 (cp(x::nobleGasHeat{𝗽,𝘅},
     B::Type{<:IntBase},
-    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}})::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(x, 𝒫.T, B)
+    𝒫::hasTPair{𝗽,𝘅})::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(x, 𝒫.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -191,11 +191,11 @@ the substance with specific heat modeled by `x`, making base conversion only whe
 
 # Fallback temperature specifying methods though T-Pairs.
 (cv(x::nobleGasHeat{𝗽,𝘅},
-    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}},
+    𝒫::hasTPair{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(x, 𝒫.T, B)
 (cv(x::nobleGasHeat{𝗽,𝘅},
     B::Type{<:IntBase},
-    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(x, 𝒫.T, B)
+    𝒫::hasTPair{𝗽,𝘅})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(x, 𝒫.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -214,7 +214,7 @@ Returns the particular gas specific heat ratio for the substance with specific h
 
 # Fallback temperature specifying methods though T-Pairs.
 (ga(x::nobleGasHeat{𝗽,𝘅,𝗯},
-    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(x, 𝒫.T)
+    𝒫::hasTPair{𝗽,𝘅})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(x, 𝒫.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -233,7 +233,7 @@ modeled by `x`, without conversions. For ideal gases, \$k = ga\$.
 
 # Fallback temperature specifying methods though T-Pairs.
 (k_(x::nobleGasHeat{𝗽,𝘅,𝗯},
-    𝒫::Union{TPPair{𝗽,𝘅},TvPair{𝗽,𝘅}})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(x, 𝒫.T)
+    𝒫::hasTPair{𝗽,𝘅})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(x, 𝒫.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -256,6 +256,12 @@ temperatures of `Ti` and `Tf`, respectively.
     de(cv(x, B) * (Tf - Ti))
 end
 
+# Fallback method with hasTPair arguments
+(Δu(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫i::hasTPair{𝗽,𝘅},
+    𝒫f::hasTPair{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δu(x, 𝒫i.T, 𝒫f.T, B)
+
 # Alias
 du = Δu
 
@@ -276,6 +282,11 @@ base for the substance with specific heat modeled by `x`, for states with temper
     B::Type{<:IntBase}=DEF[:IB])::u_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
     u_(Δu(x, Tref(x), theT, B))
 end
+
+# Fallback method with hasTPair arguments
+(u_(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫::hasTPair{𝗽,𝘅},
+    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = u_(x, 𝒫.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -298,6 +309,12 @@ of `Ti` and `Tf`, respectively.
     de(cp(x, B) * (Tf - Ti))
 end
 
+# Fallback method with hasTPair arguments
+(Δh(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫i::hasTPair{𝗽,𝘅},
+    𝒫f::hasTPair{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δh(x, 𝒫i.T, 𝒫f.T, B)
+
 # Alias
 dh = Δh
 
@@ -318,6 +335,11 @@ with specific heat modeled by `x`, for states with temperature `theT`.
     B::Type{<:IntBase}=DEF[:IB])::h_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
     h_(Δh(x, Tref(x), theT, B) + R_(x, B) * Tref(x))
 end
+
+# Fallback method with hasTPair arguments
+(h_(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫::hasTPair{𝗽,𝘅},
+    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = h_(x, 𝒫.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -340,6 +362,12 @@ final temperatures of `Ti` and `Tf`, respectively.
     ds(cp(x, B) * log(Tf/Ti))
 end
 
+# Fallback method with hasTPair arguments
+(Δs°(x::nobleGasHeat{𝗽,𝘅,𝗯},
+     𝒫i::hasTPair{𝗽,𝘅},
+     𝒫f::hasTPair{𝗽,𝘅},
+     B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δs°(x, 𝒫i.T, 𝒫f.T, B)
+
 # Alias
 ds0 = Δs°
 
@@ -360,6 +388,11 @@ for the substance with specific heat modeled by `x`, for states with temperature
     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
     s_(Δs°(x, Tref(x), theT, B))
 end
+
+# Fallback method with hasTPair arguments
+(s°(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫::hasTPair{𝗽,𝘅},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = s°(x, 𝒫.T, B)
 
 # Alias
 s0 = s°
@@ -398,6 +431,12 @@ end
     ds(x, Ti, Tf, Pi, Pf, B)
 end
 
+# Fallback versions with <:EoSPair input types
+(ds(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝑖::TPPair{𝗽,𝘅}, # initial (T, P)
+    𝑓::TPPair{𝗽,𝘅}, # final (T, P)
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = ds(x, 𝑖.T, 𝑓.T, 𝑖.P, 𝑓.P, B)
+
 """
 `(ds(x::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
     Ti::T_amt{𝗽,𝘅},
@@ -424,8 +463,14 @@ end
     Ti::T_amt{𝗽,𝘅},
     Tf::T_amt{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯𝗔,𝗯𝗕} = begin
-    ds(x, Ti, Tf, vi, vf, B)    # fallsback
+    ds(x, Ti, Tf, vi, vf, B)    # fallback
 end
+
+# Fallback versions with <:EoSPair input types
+(ds(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝑖::TvPair{𝗽,𝘅}, # initial (T, v)
+    𝑓::TvPair{𝗽,𝘅}, # final (T, v)
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = ds(x, 𝑖.T, 𝑓.T, 𝑖.v, 𝑓.v, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -454,6 +499,11 @@ end
     s_(x, theT, theP, B)
 end
 
+# Fallback method with TPPair arguments
+(s_(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫::TPPair{𝗽,𝘅},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = s_(x, 𝒫.T, 𝒫.P, B)
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #               Pr: Particular gas relative pressure               #
@@ -469,6 +519,10 @@ Returns the particular gas relative pressure for the substance with specific hea
     theT::T_amt{𝗽,𝘅})::Pramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = begin
     Pr(exp(s°(x, theT, 𝗯) / R_(x, 𝗯)))
 end
+
+# Fallback method with hasTPair arguments
+(Pr(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    hasT::hasTPair{𝗽,𝘅})::Pramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = Pr(x, hasT.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -486,6 +540,10 @@ in the specified thermodynamic temperature `theT`.
     # The be(𝗽(ℯ)) term is a scale factor to render the numerator dimensionless
     vr(theT * be(𝗽(ℯ)) / Pr(x, theT))
 end
+
+# Fallback method with hasTPair arguments
+(vr(x::nobleGasHeat{𝗽,𝘅,𝗯},
+    hasT::hasTPair{𝗽,𝘅})::vramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = vr(x, hasT.T)
 
 
 
