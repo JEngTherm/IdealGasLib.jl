@@ -49,8 +49,13 @@ Function to return an ideal gas' specific ideal gas partial entropy.
 """
 function s° end
 
+"""
+Function to return an ideal gas' variation of specific entropy.
+"""
+function Δs end
+
 
 # Interface exports
-export name, form, Tref, Pref, sref, Δu, Δh, Δs°, s°
+export name, form, Tref, Pref, sref, Δu, Δh, Δs°, s°, Δs
 
 
