@@ -17,8 +17,8 @@ struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
     Pref::P_amt{𝗽,𝘅}        # The reference state pressure
     sref::s_amt{𝗽,𝘅,𝗯}      # The reference state specific entropy
     # Inner copy constructor
-    nobleGasHeat(𝒽::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
-        new{𝗽,𝘅,𝗯}(𝒽.M, 𝒽.c, 𝒽.Tref, 𝒽.Pref, 𝒽.sref)
+    nobleGasHeat(𝐻::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
+        new{𝗽,𝘅,𝗯}(𝐻.M, 𝐻.c, 𝐻.Tref, 𝐻.Pref, 𝐻.sref)
     end
     # Inner checking & promoting constructor
     nobleGasHeat(__M::m_amt{𝗽𝗔,𝘅𝗔,MO},
@@ -53,48 +53,71 @@ end
 export nobleGasHeat
 
 # Type displaying
-deco(𝒽::nobleGasHeat{𝗽,𝘅,MA}) where {𝗽,𝘅} = Symbol("noble-cp(T)")
-deco(𝒽::nobleGasHeat{𝗽,𝘅,MO}) where {𝗽,𝘅} = Symbol("noble-c̄p(T)")
+deco(𝐻::nobleGasHeat{𝗽,𝘅,MA}) where {𝗽,𝘅} = Symbol("noble-cp(T)")
+deco(𝐻::nobleGasHeat{𝗽,𝘅,MO}) where {𝗽,𝘅} = Symbol("noble-c̄p(T)")
 
-Base.show(io::IO, 𝒽::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
+Base.show(io::IO, 𝐻::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
     if DEF[:pprint]
         print(io,
-            "$(string(deco(𝒽))): ",
-            "($(𝒽.c)) ($(𝒽.M)) ($(𝒽.Tref)) ($(𝒽.Pref)) ($(𝒽.sref))"
+            "$(string(deco(𝐻))):\n",
+            "   $(𝐻.c)\n    $(𝐻.M)\n    $(𝐻.Tref)\n    $(𝐻.Pref)\n    $(𝐻.sref)"
         )
     else
-        Base.show_default(io, 𝒽)
+        Base.show_default(io, 𝐻)
     end
 end
 
 # Type plain info access functions
 
 """
-`(Tref(𝒽::nobleGasHeat{𝗽,𝘅})::T_amt{𝗽,𝘅}) where {𝗽,𝘅}`\n
+`(Tref(𝐻::nobleGasHeat{𝗽,𝘅})::T_amt{𝗽,𝘅}) where {𝗽,𝘅}`\n
 Returns a particular gas's reference state temperature for the substance with specific heat
-modeled by `𝒽`.
+modeled by `𝐻`.
 """
-(Tref(𝒽::nobleGasHeat{𝗽,𝘅})::T_amt{𝗽,𝘅}) where {𝗽,𝘅} = 𝒽.Tref
+(Tref(𝐻::nobleGasHeat{𝗽,𝘅})::T_amt{𝗽,𝘅}) where {𝗽,𝘅} = 𝐻.Tref
 
 """
-`(Pref(𝒽::nobleGasHeat{𝗽,𝘅})::P_amt{𝗽,𝘅}) where {𝗽,𝘅}`\n
+`(Pref(𝐻::nobleGasHeat{𝗽,𝘅})::P_amt{𝗽,𝘅}) where {𝗽,𝘅}`\n
 Returns a particular gas's reference state pressure for the substance with specific heat modeled
-by `𝒽`.
+by `𝐻`.
 """
-(Pref(𝒽::nobleGasHeat{𝗽,𝘅})::P_amt{𝗽,𝘅}) where {𝗽,𝘅} = 𝒽.Pref
+(Pref(𝐻::nobleGasHeat{𝗽,𝘅})::P_amt{𝗽,𝘅}) where {𝗽,𝘅} = 𝐻.Pref
 
 """
-`(sref(𝒽::nobleGasHeat{𝗽,𝘅,𝗯})::s_amt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯}`\n
+`(sref(𝐻::nobleGasHeat{𝗽,𝘅,𝗯})::s_amt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯}`\n
 Returns a particular gas's reference state specific entropy for the substance with specific heat
-modeled by `𝒽`.
+modeled by `𝐻`.
 """
-(sref(𝒽::nobleGasHeat{𝗽,𝘅,𝗯})::s_amt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = 𝒽.sref
+(sref(𝐻::nobleGasHeat{𝗽,𝘅,𝗯})::s_amt{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = 𝐻.sref
 
-(sref(𝒽::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MA})::s_amt{𝗽,𝘅,MA}) where {𝗽,𝘅} = 𝒽.sref / 𝒽.M
-(sref(𝒽::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MO})::s_amt{𝗽,𝘅,MO}) where {𝗽,𝘅} = 𝒽.sref * 𝒽.M
+(sref(𝐻::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MA})::s_amt{𝗽,𝘅,MA}) where {𝗽,𝘅} = 𝐻.sref / 𝐻.M
+(sref(𝐻::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MO})::s_amt{𝗽,𝘅,MO}) where {𝗽,𝘅} = 𝐻.sref * 𝐻.M
 
-(sref(𝒽::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::s_amt{𝗽,𝘅,MO}) where {𝗽,𝘅} = 𝒽.sref
-(sref(𝒽::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::s_amt{𝗽,𝘅,MA}) where {𝗽,𝘅} = 𝒽.sref
+(sref(𝐻::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::s_amt{𝗽,𝘅,MO}) where {𝗽,𝘅} = 𝐻.sref
+(sref(𝐻::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::s_amt{𝗽,𝘅,MA}) where {𝗽,𝘅} = 𝐻.sref
+
+
+#······························································································#
+#                                       Type Operations                                        #
+#······························································································#
+
+import Base: +, -, *, /
+
++(𝐴::nobleGasHeat{𝗽𝗔,𝘅𝗔,𝗯𝗔},
+  𝐵::nobleGasHeat{𝗽𝗕,𝘅𝗕,𝗯𝗕}) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗯𝗔,𝗯𝗕} = begin
+    # Precision and Exactness promotion
+    𝗽 = promote_type(𝗽𝗔, 𝗽𝗕)
+    𝘅 = promote_type(𝘅𝗔, 𝘅𝗕)
+    @assert T_amt{𝗽}(𝐴.Tref) == T_amt{𝗽}(𝐵.Tref)
+    @assert P_amt{𝗽}(𝐴.Pref) == P_amt{𝗽}(𝐵.Pref)
+    nobleGasHeat(
+        m_amt{𝗽}(𝐴.M) + m_amt{𝗽}(𝐵.M),
+        cpamt{𝗽}(𝐴.c) + cpamt{𝗽}(cp(𝐵, 𝗯𝗔)),
+        T_amt{𝗽}(𝐴.Tref),
+        P_amt{𝗽}(𝐴.Pref),
+        s_amt{𝗽}(𝐴.sref) + s_amt{𝗽}(sref(𝐵, 𝗯𝗔))
+    )
+end
 
 
 #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -107,11 +130,11 @@ modeled by `𝒽`.
 
 # Particular gas molecular mass
 """
-`(m_(𝒽::nobleGasHeat{𝗽,𝘅})::m_amt{𝗽,𝘅,MO}) where {𝗽,𝘅}`\n
-Returns the particular gas molecular mass for the substance with specific heat modeled by `𝒽`
+`(m_(𝐻::nobleGasHeat{𝗽,𝘅})::m_amt{𝗽,𝘅,MO}) where {𝗽,𝘅}`\n
+Returns the particular gas molecular mass for the substance with specific heat modeled by `𝐻`
 without conversions.
 """
-(m_(𝒽::nobleGasHeat{𝗽,𝘅})::m_amt{𝗽,𝘅,MO}) where {𝗽,𝘅} = 𝒽.M
+(m_(𝐻::nobleGasHeat{𝗽,𝘅})::m_amt{𝗽,𝘅,MO}) where {𝗽,𝘅} = 𝐻.M
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -121,15 +144,15 @@ without conversions.
 # Particular gas constant -- function syntax thanks to
 # https://stackoverflow.com/a/65890762/4038337
 """
-`(R_(𝒽::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::R_amt{𝗽,𝘅,B}) where {𝗽,𝘅}`\n
-Returns the particular gas constant for the substance with specific heat modeled by `𝒽` in the
+`(R_(𝐻::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::R_amt{𝗽,𝘅,B}) where {𝗽,𝘅}`\n
+Returns the particular gas constant for the substance with specific heat modeled by `𝐻` in the
 default or specified base.
 """
-(R_(𝒽::nobleGasHeat{𝗽,𝘅}, B::Type{MA})::R_amt{𝗽,𝘅,MA}) where {𝗽,𝘅} = R_(𝗽, 𝘅) / 𝒽.M
-(R_(𝒽::nobleGasHeat{𝗽,𝘅}, B::Type{MO})::R_amt{𝗽,𝘅,MO}) where {𝗽,𝘅} = R_(𝗽, 𝘅)
+(R_(𝐻::nobleGasHeat{𝗽,𝘅}, B::Type{MA})::R_amt{𝗽,𝘅,MA}) where {𝗽,𝘅} = R_(𝗽, 𝘅) / 𝐻.M
+(R_(𝐻::nobleGasHeat{𝗽,𝘅}, B::Type{MO})::R_amt{𝗽,𝘅,MO}) where {𝗽,𝘅} = R_(𝗽, 𝘅)
 
 # Type stable, fallback version
-(R_(𝒽::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::R_amt{𝗽,𝘅,B}) where {𝗽,𝘅} = R_(𝒽, B)
+(R_(𝐻::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::R_amt{𝗽,𝘅,B}) where {𝗽,𝘅} = R_(𝐻, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -138,35 +161,35 @@ default or specified base.
 
 # Particular gas cp values: no conversion
 """
-`cp(𝒽::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])`\n
+`cp(𝐻::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])`\n
 Returns the particular gas constant-pressure specific heat in the default or specified base for
-the substance with specific heat modeled by `𝒽`, making base conversion only when necessary.
+the substance with specific heat modeled by `𝐻`, making base conversion only when necessary.
 """
-(cp(𝒽::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::cpamt{𝗽,𝘅,MA}) where {𝗽,𝘅} = 𝒽.c
-(cp(𝒽::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::cpamt{𝗽,𝘅,MO}) where {𝗽,𝘅} = 𝒽.c
+(cp(𝐻::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::cpamt{𝗽,𝘅,MA}) where {𝗽,𝘅} = 𝐻.c
+(cp(𝐻::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MO})::cpamt{𝗽,𝘅,MO}) where {𝗽,𝘅} = 𝐻.c
 
 # Particular gas cp values: w/ conversion
-(cp(𝒽::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MO})::cpamt{𝗽,𝘅,MO}) where {𝗽,𝘅} = cp(𝒽.c * 𝒽.M)
-(cp(𝒽::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MA})::cpamt{𝗽,𝘅,MA}) where {𝗽,𝘅} = cp(𝒽.c / 𝒽.M)
+(cp(𝐻::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MO})::cpamt{𝗽,𝘅,MO}) where {𝗽,𝘅} = cp(𝐻.c * 𝐻.M)
+(cp(𝐻::nobleGasHeat{𝗽,𝘅,MO}, B::Type{MA})::cpamt{𝗽,𝘅,MA}) where {𝗽,𝘅} = cp(𝐻.c / 𝐻.M)
 
 # Type-stable, fallback version
-(cp(𝒽::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝒽, B)
+(cp(𝐻::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝐻, B)
 
 # Temperature specifying methods
-(cp(𝒽::nobleGasHeat{𝗽,𝘅},
+(cp(𝐻::nobleGasHeat{𝗽,𝘅},
     T::T_amt{𝗽,𝘅},
-    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝒽, B)
-(cp(𝒽::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝐻, B)
+(cp(𝐻::nobleGasHeat{𝗽,𝘅},
     B::Type{<:IntBase},
-    T::T_amt{𝗽,𝘅})::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝒽, B)
+    T::T_amt{𝗽,𝘅})::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝐻, B)
 
 # Fallback temperature specifying methods though T-Pairs.
-(cp(𝒽::nobleGasHeat{𝗽,𝘅},
+(cp(𝐻::nobleGasHeat{𝗽,𝘅},
     𝒫::hasTPair{𝗽,𝘅},
-    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝒽, 𝒫.T, B)
-(cp(𝒽::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝐻, 𝒫.T, B)
+(cp(𝐻::nobleGasHeat{𝗽,𝘅},
     B::Type{<:IntBase},
-    𝒫::hasTPair{𝗽,𝘅})::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝒽, 𝒫.T, B)
+    𝒫::hasTPair{𝗽,𝘅})::cpamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cp(𝐻, 𝒫.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -175,28 +198,28 @@ the substance with specific heat modeled by `𝒽`, making base conversion only 
 
 # Particular gas cv values: type-stable, fallback methods
 """
-`cv(𝒽::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])`\n
+`cv(𝐻::nobleGasHeat{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])`\n
 Returns the particular gas constant-volume specific heat in the default or specified base for
-the substance with specific heat modeled by `𝒽`, making base conversion only when necessary.
+the substance with specific heat modeled by `𝐻`, making base conversion only when necessary.
 """
-(cv(𝒽::nobleGasHeat{𝗽,𝘅},
-    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(cp(𝒽, B) - R_(𝒽, B))
+(cv(𝐻::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(cp(𝐻, B) - R_(𝐻, B))
 
 # Temperature specifying methods
-(cv(𝒽::nobleGasHeat{𝗽,𝘅},
+(cv(𝐻::nobleGasHeat{𝗽,𝘅},
     T::T_amt{𝗽,𝘅},
-    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(𝒽, B)
-(cv(𝒽::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(𝐻, B)
+(cv(𝐻::nobleGasHeat{𝗽,𝘅},
     B::Type{<:IntBase},
-    T::T_amt{𝗽,𝘅})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(𝒽, B)
+    T::T_amt{𝗽,𝘅})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(𝐻, B)
 
 # Fallback temperature specifying methods though T-Pairs.
-(cv(𝒽::nobleGasHeat{𝗽,𝘅},
+(cv(𝐻::nobleGasHeat{𝗽,𝘅},
     𝒫::hasTPair{𝗽,𝘅},
-    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(𝒽, 𝒫.T, B)
-(cv(𝒽::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(𝐻, 𝒫.T, B)
+(cv(𝐻::nobleGasHeat{𝗽,𝘅},
     B::Type{<:IntBase},
-    𝒫::hasTPair{𝗽,𝘅})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(𝒽, 𝒫.T, B)
+    𝒫::hasTPair{𝗽,𝘅})::cvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = cv(𝐻, 𝒫.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -204,18 +227,18 @@ the substance with specific heat modeled by `𝒽`, making base conversion only 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(ga(𝒽::nobleGasHeat{𝗽,𝘅,𝗯})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
+`(ga(𝐻::nobleGasHeat{𝗽,𝘅,𝗯})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
 Returns the particular gas specific heat ratio for the substance with specific heat modeled by
-`𝒽`, without conversions.
+`𝐻`, without conversions.
 """
-(ga(𝒽::nobleGasHeat{𝗽,𝘅,𝗯})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(cp(𝒽, 𝗯)/cv(𝒽, 𝗯))
+(ga(𝐻::nobleGasHeat{𝗽,𝘅,𝗯})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(cp(𝐻, 𝗯)/cv(𝐻, 𝗯))
 
 # Temperature specifying method
-(ga(𝒽::nobleGasHeat{𝗽,𝘅,𝗯}, T::T_amt{𝗽,𝘅})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(𝒽)
+(ga(𝐻::nobleGasHeat{𝗽,𝘅,𝗯}, T::T_amt{𝗽,𝘅})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(𝐻)
 
 # Fallback temperature specifying methods though T-Pairs.
-(ga(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
-    𝒫::hasTPair{𝗽,𝘅})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(𝒽, 𝒫.T)
+(ga(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫::hasTPair{𝗽,𝘅})::gaamt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = ga(𝐻, 𝒫.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -223,18 +246,18 @@ Returns the particular gas specific heat ratio for the substance with specific h
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(k_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
+`(k_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
 Returns the particular gas isentropic expansion exponent for the substance with specific heat
-modeled by `𝒽`, without conversions. For ideal gases, \$k = ga\$.
+modeled by `𝐻`, without conversions. For ideal gases, \$k = ga\$.
 """
-(k_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(ga(𝒽))  # ga fallback
+(k_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(ga(𝐻))  # ga fallback
 
 # Temperature specifying method
-(k_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯}, T::T_amt{𝗽,𝘅})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(𝒽)
+(k_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯}, T::T_amt{𝗽,𝘅})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(𝐻)
 
 # Fallback temperature specifying methods though T-Pairs.
-(k_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
-    𝒫::hasTPair{𝗽,𝘅})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(𝒽, 𝒫.T)
+(k_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
+    𝒫::hasTPair{𝗽,𝘅})::k_amt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = k_(𝐻, 𝒫.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -242,26 +265,26 @@ modeled by `𝒽`, without conversions. For ideal gases, \$k = ga\$.
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(Δu(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(Δu(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      Ti::T_amt{𝗽,𝘅},
      Tf::T_amt{𝗽,𝘅},
      B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
 Returns the particular gas variation in specific internal energy in the specified or default
-base for the substance with specific heat modeled by `𝒽`, for process with initial and final
+base for the substance with specific heat modeled by `𝐻`, for process with initial and final
 temperatures of `Ti` and `Tf`, respectively.
 """
-(Δu(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(Δu(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     Ti::T_amt{𝗽,𝘅},
     Tf::T_amt{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    de(cv(𝒽, B) * (Tf - Ti))
+    de(cv(𝐻, B) * (Tf - Ti))
 end
 
 # Fallback method with hasTPair arguments
-(Δu(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(Δu(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     𝒫i::hasTPair{𝗽,𝘅},
     𝒫f::hasTPair{𝗽,𝘅},
-    B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δu(𝒽, 𝒫i.T, 𝒫f.T, B)
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δu(𝐻, 𝒫i.T, 𝒫f.T, B)
 
 # Alias
 du = Δu
@@ -272,22 +295,22 @@ du = Δu
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(u_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(u_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      theT::T_amt{𝗽,𝘅},
      B::Type{<:IntBase}=DEF[:IB])::u_amt{𝗽,𝘅,B})`\n
 Returns the particular gas specific internal energy in the specified or default
-base for the substance with specific heat modeled by `𝒽`, for states with temperature `theT`.
+base for the substance with specific heat modeled by `𝐻`, for states with temperature `theT`.
 """
-(u_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(u_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::T_amt{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::u_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    u_(Δu(𝒽, Tref(𝒽), theT, B))
+    u_(Δu(𝐻, Tref(𝐻), theT, B))
 end
 
 # Fallback method with hasTPair arguments
-(u_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(u_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     𝒫::hasTPair{𝗽,𝘅},
-    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = u_(𝒽, 𝒫.T, B)
+    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = u_(𝐻, 𝒫.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -295,26 +318,26 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(Δh(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(Δh(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      Ti::T_amt{𝗽,𝘅},
      Tf::T_amt{𝗽,𝘅},
      B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
 Returns the particular gas variation in specific enthalpy in the specified or default base for
-the substance with specific heat modeled by `𝒽`, for process with initial and final temperatures
+the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
 of `Ti` and `Tf`, respectively.
 """
-(Δh(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(Δh(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     Ti::T_amt{𝗽,𝘅},
     Tf::T_amt{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    de(cp(𝒽, B) * (Tf - Ti))
+    de(cp(𝐻, B) * (Tf - Ti))
 end
 
 # Fallback method with hasTPair arguments
-(Δh(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(Δh(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     𝒫i::hasTPair{𝗽,𝘅},
     𝒫f::hasTPair{𝗽,𝘅},
-    B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δh(𝒽, 𝒫i.T, 𝒫f.T, B)
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δh(𝐻, 𝒫i.T, 𝒫f.T, B)
 
 # Alias
 dh = Δh
@@ -325,22 +348,22 @@ dh = Δh
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(h_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(h_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      theT::T_amt{𝗽,𝘅},
      B::Type{<:IntBase}=DEF[:IB])::h_amt{𝗽,𝘅,B})`\n
 Returns the particular gas specific enthalpy in the specified or default base for the substance
-with specific heat modeled by `𝒽`, for states with temperature `theT`.
+with specific heat modeled by `𝐻`, for states with temperature `theT`.
 """
-(h_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(h_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::T_amt{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::h_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    h_(Δh(𝒽, Tref(𝒽), theT, B) + R_(𝒽, B) * Tref(𝒽))
+    h_(Δh(𝐻, Tref(𝐻), theT, B) + R_(𝐻, B) * Tref(𝐻))
 end
 
 # Fallback method with hasTPair arguments
-(h_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(h_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     𝒫::hasTPair{𝗽,𝘅},
-    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = h_(𝒽, 𝒫.T, B)
+    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = h_(𝐻, 𝒫.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -348,26 +371,26 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(Δs°(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(Δs°(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
       Ti::T_amt{𝗽,𝘅},
       Tf::T_amt{𝗽,𝘅},
       B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
 Returns the particular gas variation in ideal gas partial specific entropy in the specified or
-default base for the substance with specific heat modeled by `𝒽`, for process with initial and
+default base for the substance with specific heat modeled by `𝐻`, for process with initial and
 final temperatures of `Ti` and `Tf`, respectively.
 """
-(Δs°(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(Δs°(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      Ti::T_amt{𝗽,𝘅},
      Tf::T_amt{𝗽,𝘅},
      B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    ds(cp(𝒽, B) * log(Tf/Ti))
+    ds(cp(𝐻, B) * log(Tf/Ti))
 end
 
 # Fallback method with hasTPair arguments
-(Δs°(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(Δs°(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      𝒫i::hasTPair{𝗽,𝘅},
      𝒫f::hasTPair{𝗽,𝘅},
-     B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δs°(𝒽, 𝒫i.T, 𝒫f.T, B)
+     B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δs°(𝐻, 𝒫i.T, 𝒫f.T, B)
 
 # Alias
 ds0 = Δs°
@@ -378,22 +401,22 @@ ds0 = Δs°
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(s°(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(s°(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      theT::T_amt{𝗽,𝘅},
      B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B})`\n
 Returns the particular gas specific ideal gas partial entropy in the specified or default base
-for the substance with specific heat modeled by `𝒽`, for states with temperature `theT`.
+for the substance with specific heat modeled by `𝐻`, for states with temperature `theT`.
 """
-(s°(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(s°(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::T_amt{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    s_(Δs°(𝒽, Tref(𝒽), theT, B))
+    s_(Δs°(𝐻, Tref(𝐻), theT, B))
 end
 
 # Fallback method with hasTPair arguments
-(s°(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(s°(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     𝒫::hasTPair{𝗽,𝘅},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = s°(𝒽, 𝒫.T, B)
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = s°(𝐻, 𝒫.T, B)
 
 # Alias
 s0 = s°
@@ -404,74 +427,74 @@ s0 = s°
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(ds(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(ds(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      Ti::T_amt{𝗽,𝘅},
      Tf::T_amt{𝗽,𝘅},
      Pi::P_amt{𝗽,𝘅},
      Pf::P_amt{𝗽,𝘅},
      B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯}`\n
 Returns the particular gas variation in specific entropy in the specified or default base for
-the substance with specific heat modeled by `𝒽`, for process with initial and final temperatures
+the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
 and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively.
 """
-(ds(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(ds(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     Ti::T_amt{𝗽,𝘅},
     Tf::T_amt{𝗽,𝘅},
     Pi::P_amt{𝗽,𝘅},
     Pf::P_amt{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    ds(cp(𝒽, B) * log(Tf/Ti) - R_(𝒽, B) * log(Pf/Pi))
+    ds(cp(𝐻, B) * log(Tf/Ti) - R_(𝐻, B) * log(Pf/Pi))
 end
 
-(ds(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(ds(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     Pi::P_amt{𝗽,𝘅},
     Pf::P_amt{𝗽,𝘅},
     Ti::T_amt{𝗽,𝘅},
     Tf::T_amt{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    ds(𝒽, Ti, Tf, Pi, Pf, B)
+    ds(𝐻, Ti, Tf, Pi, Pf, B)
 end
 
 # Fallback versions with <:EoSPair input types
-(ds(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(ds(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     𝑖::TPPair{𝗽,𝘅}, # initial (T, P)
     𝑓::TPPair{𝗽,𝘅}, # final (T, P)
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = ds(𝒽, 𝑖.T, 𝑓.T, 𝑖.P, 𝑓.P, B)
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.P, 𝑓.P, B)
 
 """
-`(ds(𝒽::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
+`(ds(𝐻::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
     Ti::T_amt{𝗽,𝘅},
     Tf::T_amt{𝗽,𝘅},
     vi::v_amt{𝗽,𝘅,𝗯𝗕},
     vf::v_amt{𝗽,𝘅,𝗯𝗕},
     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯𝗔,𝗯𝗕}`\n
 Returns the particular gas variation in specific entropy in the specified or default base for
-the substance with specific heat modeled by `𝒽`, for process with initial and final temperatures
+the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
 and specific volumes of `Ti` and `Tf`, and `vi` and `vf`, respectively.
 """
-(ds(𝒽::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
+(ds(𝐻::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
     Ti::T_amt{𝗽,𝘅},
     Tf::T_amt{𝗽,𝘅},
     vi::v_amt{𝗽,𝘅,𝗯𝗕},
     vf::v_amt{𝗽,𝘅,𝗯𝗕},
     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯𝗔,𝗯𝗕} = begin
-    ds(cv(𝒽, B) * log(Tf/Ti) + R_(𝒽, B) * log(vf/vi))
+    ds(cv(𝐻, B) * log(Tf/Ti) + R_(𝐻, B) * log(vf/vi))
 end
 
-(ds(𝒽::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
+(ds(𝐻::nobleGasHeat{𝗽,𝘅,𝗯𝗔},
     vi::v_amt{𝗽,𝘅,𝗯𝗕},
     vf::v_amt{𝗽,𝘅,𝗯𝗕},
     Ti::T_amt{𝗽,𝘅},
     Tf::T_amt{𝗽,𝘅},
     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯𝗔,𝗯𝗕} = begin
-    ds(𝒽, Ti, Tf, vi, vf, B)    # fallback
+    ds(𝐻, Ti, Tf, vi, vf, B)    # fallback
 end
 
 # Fallback versions with <:EoSPair input types
-(ds(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(ds(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     𝑖::TvPair{𝗽,𝘅}, # initial (T, v)
     𝑓::TvPair{𝗽,𝘅}, # final (T, v)
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = ds(𝒽, 𝑖.T, 𝑓.T, 𝑖.v, 𝑓.v, B)
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.v, 𝑓.v, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -479,31 +502,31 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(s_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(s_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      theT::T_amt{𝗽,𝘅},
      theP::P_amt{𝗽,𝘅},
      B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B})`\n
 Returns the particular gas specific entropy in the specified or default base for the substance
-with specific heat modeled by `𝒽`, in the specified thermodynamic state (`theT`, `theP`).
+with specific heat modeled by `𝐻`, in the specified thermodynamic state (`theT`, `theP`).
 """
-(s_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(s_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::T_amt{𝗽,𝘅},
     theP::P_amt{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    s_(ds(𝒽, Tref(𝒽), theT, Pref(𝒽), theP, B))
+    s_(ds(𝐻, Tref(𝐻), theT, Pref(𝐻), theP, B))
 end
 
-(s_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(s_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     theP::P_amt{𝗽,𝘅},
     theT::T_amt{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    s_(𝒽, theT, theP, B)
+    s_(𝐻, theT, theP, B)
 end
 
 # Fallback method with TPPair arguments
-(s_(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(s_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     𝒫::TPPair{𝗽,𝘅},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = s_(𝒽, 𝒫.T, 𝒫.P, B)
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = s_(𝐻, 𝒫.T, 𝒫.P, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -511,19 +534,19 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(Pr(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(Pr(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      theT::T_amt{𝗽,𝘅})::Pramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
 Returns the particular gas relative pressure for the substance with specific heat modeled by
-`𝒽`, in the specified thermodynamic temperature `theT`.
+`𝐻`, in the specified thermodynamic temperature `theT`.
 """
-(Pr(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(Pr(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::T_amt{𝗽,𝘅})::Pramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = begin
-    Pr(exp(s°(𝒽, theT, 𝗯) / R_(𝒽, 𝗯)))
+    Pr(exp(s°(𝐻, theT, 𝗯) / R_(𝐻, 𝗯)))
 end
 
 # Fallback method with hasTPair arguments
-(Pr(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
-    hasT::hasTPair{𝗽,𝘅})::Pramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = Pr(𝒽, hasT.T)
+(Pr(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
+    hasT::hasTPair{𝗽,𝘅})::Pramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = Pr(𝐻, hasT.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -531,20 +554,20 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(vr(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+`(vr(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      theT::T_amt{𝗽,𝘅})::vramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯}`\n
-Returns the particular gas relative volume for the substance with specific heat modeled by `𝒽`,
+Returns the particular gas relative volume for the substance with specific heat modeled by `𝐻`,
 in the specified thermodynamic temperature `theT`.
 """
-(vr(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
+(vr(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::T_amt{𝗽,𝘅})::vramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = begin
     # The be(𝗽(ℯ)) term is a scale factor to render the numerator dimensionless
-    vr(theT * be(𝗽(ℯ)) / Pr(𝒽, theT))
+    vr(theT * be(𝗽(ℯ)) / Pr(𝐻, theT))
 end
 
 # Fallback method with hasTPair arguments
-(vr(𝒽::nobleGasHeat{𝗽,𝘅,𝗯},
-    hasT::hasTPair{𝗽,𝘅})::vramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = vr(𝒽, hasT.T)
+(vr(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
+    hasT::hasTPair{𝗽,𝘅})::vramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = vr(𝐻, hasT.T)
 
 
 
