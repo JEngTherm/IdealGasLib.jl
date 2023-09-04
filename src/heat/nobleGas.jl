@@ -39,7 +39,7 @@ struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
         @assert amt(__c).val >  0.0
         @assert amt(T_r).val >  0.0
         @assert amt(P_r).val >  0.0
-        @assert amt(s_r).val >= 0.0
+        ## @assert amt(s_r).val >= 0.0
         # Returns
         new{𝗽,𝘅,𝗯}(m_amt{𝗽,𝘅}(__M),
                    cpamt{𝗽,𝘅}(__c),
@@ -103,6 +103,7 @@ modeled by `𝐻`.
 
 import Base: +, -, *, /
 
+# Adittion, promoting while keeping the first operand's base
 +(𝐴::nobleGasHeat{𝗽𝗔,𝘅𝗔,𝗯𝗔},
   𝐵::nobleGasHeat{𝗽𝗕,𝘅𝗕,𝗯𝗕}) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗯𝗔,𝗯𝗕} = begin
     # Precision and Exactness promotion
@@ -116,6 +117,37 @@ import Base: +, -, *, /
         T_amt{𝗽}(𝐴.Tref),
         P_amt{𝗽}(𝐴.Pref),
         s_amt{𝗽}(𝐴.sref) + s_amt{𝗽}(sref(𝐵, 𝗯𝗔))
+    )
+end
+
+# Subtraction, promoting while keeping the first operand's base
+-(𝐴::nobleGasHeat{𝗽𝗔,𝘅𝗔,𝗯𝗔},
+  𝐵::nobleGasHeat{𝗽𝗕,𝘅𝗕,𝗯𝗕}) where {𝗽𝗔,𝘅𝗔,𝗽𝗕,𝘅𝗕,𝗯𝗔,𝗯𝗕} = begin
+    # Precision and Exactness promotion
+    𝗽 = promote_type(𝗽𝗔, 𝗽𝗕)
+    𝘅 = promote_type(𝘅𝗔, 𝘅𝗕)
+    @assert T_amt{𝗽}(𝐴.Tref) == T_amt{𝗽}(𝐵.Tref)
+    @assert P_amt{𝗽}(𝐴.Pref) == P_amt{𝗽}(𝐵.Pref)
+    # Inner constructor checks for {M, c, Tref, Pref} out of physical bounds
+    nobleGasHeat(
+        m_amt{𝗽}(𝐴.M) - m_amt{𝗽}(𝐵.M),
+        cpamt{𝗽}(𝐴.c) - cpamt{𝗽}(cp(𝐵, 𝗯𝗔)),
+        T_amt{𝗽}(𝐴.Tref),
+        P_amt{𝗽}(𝐴.Pref),
+        s_amt{𝗽}(𝐴.sref) - s_amt{𝗽}(sref(𝐵, 𝗯𝗔))
+    )
+end
+
+# Scalar multiplication, promoting while keeping the first operand's base
+*(𝐴::nobleGasHeat{𝗽𝗔,𝘅,𝗯}, N::EngThermBase.plnF{𝗽𝗡}) where {𝗽𝗔,𝘅,𝗯,𝗽𝗡<:PREC} = begin
+    # Precision and Exactness promotion
+    𝗽 = promote_type(𝗽𝗔, 𝗽𝗡)
+    nobleGasHeat(
+        m_amt{𝗽}(𝐴.M) * N,
+        cpamt{𝗽}(𝐴.c) * N,
+        T_amt{𝗽}(𝐴.Tref),
+        P_amt{𝗽}(𝐴.Pref),
+        s_amt{𝗽}(𝐴.sref),
     )
 end
 
