@@ -1,3 +1,5 @@
+![IdealGasLib](https://raw.githubusercontent.com/JEngTherm/IdealGasLib.jl/main/docs/src/assets/logo-036.png)
+
 ![IdealGasLib](https://github.com/JEngTherm/IdealGasLib.jl/blob/master/docs/src/assets/logo-036.png?raw=true)
 
 # IdealGasLib.jl
