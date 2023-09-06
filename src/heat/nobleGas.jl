@@ -35,8 +35,8 @@ struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
         𝗽 = promote_type(𝗽𝗔, 𝗽𝗕, 𝗽𝗖, 𝗽𝗗, 𝗽𝗘)
         𝘅 = promote_type(𝘅𝗔, 𝘅𝗕, 𝘅𝗖, 𝘅𝗗, 𝘅𝗘)
         # Checks
-        @assert amt(__M).val >  0.0
-        @assert amt(__c).val >  0.0
+        @assert amt(__M).val >= 0.0
+        @assert amt(__c).val >= 0.0
         @assert amt(T_r).val >  0.0
         @assert amt(P_r).val >  0.0
         ## @assert amt(s_r).val >= 0.0
@@ -101,7 +101,7 @@ modeled by `𝐻`.
 #                                       Type Operations                                        #
 #······························································································#
 
-import Base: +, -, *, /
+import Base: +, -, *, /, zero, one
 
 # Adittion, promoting while keeping the first operand's base
 +(𝐴::nobleGasHeat{𝗽𝗔,𝘅𝗔,𝗯𝗔},
@@ -150,6 +150,45 @@ end
         s_amt{𝗽}(𝐴.sref),
     )
 end
+# Fallback version
+*(N::EngThermBase.plnF{𝗽𝗡}, 𝐴::nobleGasHeat{𝗽𝗔,𝘅,𝗯}) where {𝗽𝗔,𝘅,𝗯,𝗽𝗡<:PREC} = 𝐴 * N
+
+# Division by scalar, promoting
+/(𝐴::nobleGasHeat{𝗽𝗔,𝘅,𝗯}, N::EngThermBase.plnF{𝗽𝗡}) where {𝗽𝗔,𝘅,𝗯,𝗽𝗡<:PREC} = begin
+    # Precision and Exactness promotion
+    𝗽 = promote_type(𝗽𝗔, 𝗽𝗡)
+    nobleGasHeat(
+        m_amt{𝗽}(𝐴.M) / N,
+        cpamt{𝗽}(𝐴.c) / N,
+        T_amt{𝗽}(𝐴.Tref),
+        P_amt{𝗽}(𝐴.Pref),
+        s_amt{𝗽}(𝐴.sref),
+    )
+end
+
+# Base.zero
+(zero(𝐴::nobleGasHeat{𝗽,𝘅,𝗯})::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
+    nobleGasHeat(
+        zero(𝐴.M),
+        zero(𝐴.c),
+        𝐴.Tref,
+        𝐴.Pref,
+        zero(𝐴.sref)
+    )
+end
+
+# Mixing, promoting while keeping the first heat operand's base
+(mx(ys::NTuple{𝗡,EngThermBase.plnF{𝗽𝗬}},
+    hs::Tuple{
+        nobleGasHeat{𝗽,𝘅,𝗯},
+        Vararg{nobleGasHeat,𝗡}
+    })::nobleGasHeat{promote_type(𝗽𝗬, 𝗽),𝘅,𝗯}) where {𝗡,𝗽𝗬,𝗽,𝘅,𝗯} = begin
+    Σy = sum(ys)
+    yr = one(𝗽𝗬) - Σy
+    return (hcat(ys..., yr) * vcat(hs...))[1]
+end
+
+export mx
 
 
 #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
