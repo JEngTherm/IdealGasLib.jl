@@ -367,7 +367,7 @@ end
 (Δs°(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
      𝒫i::hasTPair{𝗽,𝘅},
      𝒫f::hasTPair{𝗽,𝘅},
-     B::Type{<:IntBase} = DEF[:IB])::deamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δs°(𝐻, 𝒫i.T, 𝒫f.T, B)
+     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = Δs°(𝐻, 𝒫i.T, 𝒫f.T, B)
 
 # Alias
 ds0 = Δs°
@@ -387,7 +387,7 @@ for the substance with specific heat modeled by `𝐻`, for states with temperat
 (s°(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     theT::T_amt{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    s_(Δs°(𝐻, Tref(𝐻), theT, B))
+    s_(Δs°(𝐻, Tref(𝐻), theT, B) + sref(𝐻, B))
 end
 
 # Fallback method with hasTPair arguments
@@ -490,7 +490,7 @@ with specific heat modeled by `𝐻`, in the specified thermodynamic state (`the
     theT::T_amt{𝗽,𝘅},
     theP::P_amt{𝗽,𝘅},
     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝗽,𝘅,B}) where {𝗽,𝘅,𝗯} = begin
-    s_(ds(𝐻, Tref(𝐻), theT, Pref(𝐻), theP, B))
+    s_(ds(𝐻, Tref(𝐻), theT, Pref(𝐻), theP, B) + sref(𝐻, B))
 end
 
 (s_(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
