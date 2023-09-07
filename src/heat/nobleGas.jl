@@ -113,6 +113,14 @@ adjusted so as to yield same entropy values for the same `(T, P)` states than `�
     nobleGasHeat(𝐻.M, 𝐻.c, 𝑇, 𝑃, s_(𝐻, 𝑇, 𝑃, 𝗯))
 end
 
+# Fallback versions
+(rebase(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
+        𝑃::P_amt{𝗽,𝘅},
+        𝑇::T_amt{𝗽,𝘅})::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = rebase(𝐻, 𝑇, 𝑃)
+
+(rebase(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
+        st::TPPair{𝗽,𝘅})::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = rebase(𝐻, st.T, st.P)
+
 export rebase
 
 
