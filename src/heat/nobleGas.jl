@@ -97,6 +97,25 @@ modeled by `𝐻`.
 (sref(𝐻::nobleGasHeat{𝗽,𝘅,MA}, B::Type{MA})::s_amt{𝗽,𝘅,MA}) where {𝗽,𝘅} = 𝐻.sref
 
 
+#······························································································#
+#                                           Rebasing                                           #
+#······························································································#
+
+"""
+`(rebase(𝐻::nobleGasHeat{𝗽,𝘅,𝗯}, 𝑇::T_amt{𝗽,𝘅}, 𝑃::P_amt{𝗽,𝘅})::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯}`\n
+Returns a `nobleGasHeat` instance based on `𝐻` with `(Tref, Pref) = (𝑇, 𝑃)`, and with `sref`
+adjusted so as to yield same entropy values for the same `(T, P)` states than `𝐻`. Values of
+`s°` will also coincide only if `𝐻.Pref == 𝑃`.
+"""
+(rebase(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
+        𝑇::T_amt{𝗽,𝘅},
+        𝑃::P_amt{𝗽,𝘅})::nobleGasHeat{𝗽,𝘅,𝗯}) where {𝗽,𝘅,𝗯} = begin
+    nobleGasHeat(𝐻.M, 𝐻.c, 𝑇, 𝑃, s_(𝐻, 𝑇, 𝑃, 𝗯))
+end
+
+export rebase
+
+
 #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 #                         Basic Ideal Gas Properties from nobleGasHeat                         #
 #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
