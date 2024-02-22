@@ -84,10 +84,31 @@ end
 
 
 #······························································································#
-#                                Comparisons extended from Base                                #
+#                                          Inquiring                                           #
 #······························································································#
 
-import Base: == 
+import EngThermBase: precof, exacof, baseof
+
+"""
+`precof(::Type{𝗧} | x::𝗧) where 𝗧<:Heat{𝗽} where 𝗽 = 𝗽`\n
+Returns the precision of the `Heat` subtype or instance as a `DataType`.
+"""
+precof(::Type{𝗧}) where 𝗧<:Heat{𝗽} where 𝗽 = 𝗽
+precof(x::𝗧) where 𝗧<:Heat{𝗽} where 𝗽 = 𝗽
+
+"""
+`exacof(::Type{𝗧} | x::𝗧) where 𝗧<:Heat{𝗽} where 𝗽 = 𝗽`\n
+Returns the exactness of the `Heat` subtype or instance as a `DataType`.
+"""
+exacof(::Type{𝗧}) where 𝗧<:Heat{𝗽,𝘅} where {𝗽,𝘅} = 𝘅
+exacof(x::𝗧) where 𝗧<:Heat{𝗽,𝘅} where {𝗽,𝘅} = 𝘅
+
+"""
+`baseof(::Type{𝗧} | x::𝗧) where 𝗧<:BasedAmt{𝗽,𝘅,𝗯} where {𝗽,𝘅,𝗯} = 𝗯`\n
+Returns the thermodynamic base of the `Heat` subtype or instance as a `DataType`.
+"""
+baseof(::Type{𝗧}) where 𝗧<:Heat{𝗽,𝘅,𝗯} where {𝗽,𝘅,𝗯} = 𝗯
+baseof(x::𝗧) where 𝗧<:Heat{𝗽,𝘅,𝗯} where {𝗽,𝘅,𝗯} = 𝗯
 
 
 #······························································································#
