@@ -5,19 +5,19 @@
 import Base: show
 
 # Type declaration
-struct idealGas{𝕡<:PREC,𝕩<:EXAC,ℍ<:Heat} <: Substance{𝕡,𝕩}
+struct idealGas{ℍ<:Heat{𝕡,𝕩}} <: Substance{𝕡,𝕩}
 	name::String        # The substance name
     form::String        # The chemical formula
     heat::ℍ             # The heat capacity model
     # Inner copy constructor
-    idealGas(x::idealGas{𝕡,𝕩,ℍ}) where {𝕡,𝕩,ℍ} = begin
-        new{𝕡,𝕩,ℍ}(x.name, x.form, x.heat)
+    idealGas(x::idealGas{ℍ}) where {ℍ<:Heat{𝕡,𝕩}} where {𝕡,𝕩} = begin
+        new{ℍ}(x.name, x.form, x.heat)
     end
     # Inner checking & promoting constructor
     idealGas(NAM::AbstractString,
              FOR::AbstractString,
              CPM::ℍ) where {ℍ<:Heat{𝕡,𝕩}} where {𝕡,𝕩} = begin
-        new{𝕡,𝕩,ℍ}(NAM, FOR, CPM)
+        new{ℍ}(NAM, FOR, CPM)
     end
 end
 
@@ -27,7 +27,7 @@ export idealGas
 # Type displaying
 deco(x::idealGas) = Symbol("ideal gas")
 
-Base.show(io::IO, x::idealGas{𝕡,𝕩,ℍ}) where {𝕡,𝕩,ℍ} = begin
+Base.show(io::IO, x::idealGas{ℍ}) where {ℍ<:Heat{𝕡,𝕩}} where {𝕡,𝕩} = begin
     if DEF[:pprint]
         print(io,
             "$(x.name) $(string(deco(x))) \"$(x.form)\" ",
@@ -54,13 +54,15 @@ for FUN in (:sref, :rebase)
 end
 
 # Thermodynamic function calls
-for FUN in (:m_,:R_,:cp,:cv,:ga,:k_,:Δu,:u_,:Δh,:h_,:Δs°,:s°,:ds,:s_,:Pr,:vr,:RT,:Pv)
+for FUN in (:m_,:R_,:cp,:cv,:ga,:k_,:Δu,:u_,:Δh,:h_,:Δs°,:s°,:ds,:s_,:Pr,:vr,:RT,:Pv,:Z_)
     @eval $FUN(x::idealGas, args::Any...) = ($FUN)(x.heat, args...)
 end
 
 
-#⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
-#                                     Ideal Gas functions                                      #
-#⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+#----------------------------------------------------------------------------------------------#
+#                                           Includes                                           #
+#----------------------------------------------------------------------------------------------#
+
+include("idealGas-oper.jl")
 
 
