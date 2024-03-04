@@ -400,22 +400,22 @@ ds0 = Δs°
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(s°(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-     theT::T_amt{𝕡,𝕩},
+`(s°(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒯::T_amt{𝕡,𝕩},
      B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B})`\n
 Returns the particular gas specific ideal gas partial entropy in the specified or default base
-for the substance with specific heat modeled by `𝐻`, for states with temperature `theT`.
+for the substance with specific heat modeled by `𝐻`, for states with temperature `𝒯`.
 """
-(s°(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    theT::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
-    s_(Δs°(𝐻, Tref(𝐻), theT, B) + sref(𝐻, B))
+(s°(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    s_(Δs°(𝐻, Tref(𝐻), 𝒯, B) + sref(𝐻, B))
 end
 
 # Fallback method with hasTPair arguments
-(s°(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    𝒫::hasTPair{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = s°(𝐻, 𝒫.T, B)
+(s°(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::hasT{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = s°(𝐻, 𝒯.T, B)
 
 # Alias
 s0 = s°
