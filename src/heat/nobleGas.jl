@@ -533,19 +533,19 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(Pr(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-     theT::T_amt{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩,𝕓}`\n
+`(Pr(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒯::T_amt{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩}`\n
 Returns the particular gas relative pressure for the substance with specific heat modeled by
-`𝐻`, in the specified thermodynamic temperature `theT`.
+`𝐻`, in the specified thermodynamic temperature `𝒯`.
 """
-(Pr(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    theT::T_amt{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩,𝕓} = begin
-    Pr(exp(s°(𝐻, theT, 𝕓) / R_(𝐻, 𝕓)))
+(Pr(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::T_amt{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩} = begin
+    Pr(exp(s°(𝐻, 𝒯, 𝕓) / R_(𝐻, 𝕓)))
 end
 
 # Fallback method with hasTPair arguments
-(Pr(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    hasT::hasTPair{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩,𝕓} = Pr(𝐻, hasT.T)
+(Pr(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::hasT{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩} = Pr(𝐻, 𝒯.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
