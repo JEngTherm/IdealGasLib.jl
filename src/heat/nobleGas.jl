@@ -553,20 +553,20 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(vr(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-     theT::T_amt{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩,𝕓}`\n
+`(vr(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒯::T_amt{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩}`\n
 Returns the particular gas relative volume for the substance with specific heat modeled by `𝐻`,
-in the specified thermodynamic temperature `theT`.
+in the specified thermodynamic temperature `𝒯`.
 """
-(vr(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    theT::T_amt{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩,𝕓} = begin
+(vr(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::T_amt{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩} = begin
     # The be(𝕡(ℯ)) term is a scale factor to render the numerator dimensionless
-    vr(theT * be(𝕡(ℯ)) / Pr(𝐻, theT))
+    vr(𝒯 * be(𝕡(ℯ)) / Pr(𝐻, 𝒯))
 end
 
 # Fallback method with hasTPair arguments
-(vr(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    hasT::hasTPair{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩,𝕓} = vr(𝐻, hasT.T)
+(vr(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::hasT{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩} = vr(𝐻, 𝒯.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
