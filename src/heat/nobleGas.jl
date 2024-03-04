@@ -501,31 +501,31 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(s_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-     theT::T_amt{𝕡,𝕩},
-     theP::P_amt{𝕡,𝕩},
+`(s_(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒯::T_amt{𝕡,𝕩},
+     𝒫::P_amt{𝕡,𝕩},
      B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B})`\n
 Returns the particular gas specific entropy in the specified or default base for the substance
-with specific heat modeled by `𝐻`, in the specified thermodynamic state (`theT`, `theP`).
+with specific heat modeled by `𝐻`, in the specified thermodynamic state (`𝒯`, `𝒫`).
 """
-(s_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    theT::T_amt{𝕡,𝕩},
-    theP::P_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
-    s_(ds(𝐻, Tref(𝐻), theT, Pref(𝐻), theP, B) + sref(𝐻, B))
+(s_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::T_amt{𝕡,𝕩},
+    𝒫::P_amt{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    s_(ds(𝐻, Tref(𝐻), 𝒯, Pref(𝐻), 𝒫, B) + sref(𝐻, B))
 end
 
-(s_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    theP::P_amt{𝕡,𝕩},
-    theT::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
-    s_(𝐻, theT, theP, B)
+(s_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒫::P_amt{𝕡,𝕩},
+    𝒯::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    s_(𝐻, 𝒯, 𝒫, B)
 end
 
 # Fallback method with TPPair arguments
-(s_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
+(s_(𝐻::nobleGasHeat{𝕡,𝕩},
     𝒫::TPPair{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = s_(𝐻, 𝒫.T, 𝒫.P, B)
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = s_(𝐻, 𝒫.T, 𝒫.P, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
