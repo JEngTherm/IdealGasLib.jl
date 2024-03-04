@@ -7,7 +7,7 @@
 #----------------------------------------------------------------------------------------------#
 
 import Base: cp, show # Since :cp is further extended here
-import EngThermBase: deco, m_, R_, cv, ga, k_, u_, h_, ds, s_, Pr, vr
+import EngThermBase: deco, m_, R_, cv, ga, k_, u_, h_, ds, s_, Pr, vr, Pv, RT
 
 # Type declaration
 struct nobleGasHeat{𝗽,𝘅,𝗯} <: ConstHeat{𝗽,𝘅,𝗯}
@@ -573,6 +573,42 @@ end
 (vr(𝐻::nobleGasHeat{𝗽,𝘅,𝗯},
     hasT::hasTPair{𝗽,𝘅})::vramt{𝗽,𝘅}) where {𝗽,𝘅,𝗯} = vr(𝐻, hasT.T)
 
+
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #                         RT: RT products                          #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+# Particular gas constant -- function syntax thanks to
+# https://stackoverflow.com/a/65890762/4038337
+"""
+`(RT(𝐻::nobleGasHeat{𝗽,𝘅}, T::T_amt{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::RTamt{𝗽,𝘅,B}) where {𝗽,𝘅}`\n
+Returns the particular gas (RT) product based on the provided temperature and optional base.
+"""
+(RT(𝐻::nobleGasHeat{𝗽,𝘅},
+    T::T_amt{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::RTamt{𝗽,𝘅,B}) where {𝗽,𝘅} = R_(𝐻, B) * T
+
+(RT(𝐻::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase},
+    T::T_amt{𝗽,𝘅})::RTamt{𝗽,𝘅,B}) where {𝗽,𝘅} = RT(𝐻, T, B)
+
+
+    # !center 64 | frame 64 -f'\#⋅\# ' | center 76
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+    #                         Pv: Pv products                          #
+    #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+"""
+`(Pv(𝐻::nobleGasHeat{𝗽,𝘅}, T::T_amt{𝗽,𝘅}, B::Type{<:IntBase} = DEF[:IB])::Pvamt{𝗽,𝘅,B}) where {𝗽,𝘅}`\n
+Returns the particular gas (Pv) product based on the provided temperature and optional base.
+"""
+(Pv(𝐻::nobleGasHeat{𝗽,𝘅},
+    T::T_amt{𝗽,𝘅},
+    B::Type{<:IntBase} = DEF[:IB])::Pvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = Pv(RT(𝐻, T, B))
+
+(Pv(𝐻::nobleGasHeat{𝗽,𝘅},
+    B::Type{<:IntBase},
+    T::T_amt{𝗽,𝘅})::Pvamt{𝗽,𝘅,B}) where {𝗽,𝘅} = Pv(RT(𝐻, T, B))
 
 
 #----------------------------------------------------------------------------------------------#
