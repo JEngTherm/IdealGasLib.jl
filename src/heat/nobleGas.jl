@@ -317,26 +317,26 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(Δh(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-     Ti::T_amt{𝕡,𝕩},
-     Tf::T_amt{𝕡,𝕩},
-     B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓}`\n
+`(Δh(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒾::T_amt{𝕡,𝕩},
+     𝒻::T_amt{𝕡,𝕩},
+     B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩}`\n
 Returns the particular gas variation in specific enthalpy in the specified or default base for
 the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
-of `Ti` and `Tf`, respectively.
+of `𝒾` and `𝒻`, respectively.
 """
-(Δh(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    Ti::T_amt{𝕡,𝕩},
-    Tf::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
-    de(cp(𝐻, B) * (Tf - Ti))
+(Δh(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒾::T_amt{𝕡,𝕩},
+    𝒻::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    de(cp(𝐻, B) * (𝒻 - 𝒾))
 end
 
 # Fallback method with hasTPair arguments
-(Δh(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    𝒫i::hasTPair{𝕡,𝕩},
-    𝒫f::hasTPair{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = Δh(𝐻, 𝒫i.T, 𝒫f.T, B)
+(Δh(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒾::hasTPair{𝕡,𝕩},
+    𝒻::hasTPair{𝕡,𝕩},
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Δh(𝐻, 𝒾.T, 𝒻.T, B)
 
 # Alias
 dh = Δh
