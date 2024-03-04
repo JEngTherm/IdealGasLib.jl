@@ -294,22 +294,22 @@ du = Δu
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(u_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
+`(u_(𝐻::nobleGasHeat{𝕡,𝕩},
      theT::T_amt{𝕡,𝕩},
      B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B})`\n
 Returns the particular gas specific internal energy in the specified or default
 base for the substance with specific heat modeled by `𝐻`, for states with temperature `theT`.
 """
-(u_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    theT::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
-    u_(Δu(𝐻, Tref(𝐻), theT, B))
+(u_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    u_(Δu(𝐻, Tref(𝐻), 𝒯, B))
 end
 
 # Fallback method with hasTPair arguments
-(u_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    𝒫::hasTPair{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = u_(𝐻, 𝒫.T, B)
+(u_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::hasT{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = u_(𝐻, 𝒯.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
