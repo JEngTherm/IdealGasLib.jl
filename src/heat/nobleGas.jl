@@ -426,39 +426,39 @@ s0 = s°
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(ds(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
+`(ds(𝐻::nobleGasHeat{𝕡,𝕩},
      Ti::T_amt{𝕡,𝕩},
      Tf::T_amt{𝕡,𝕩},
      Pi::P_amt{𝕡,𝕩},
      Pf::P_amt{𝕡,𝕩},
-     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓}`\n
+     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩}`\n
 Returns the particular gas variation in specific entropy in the specified or default base for
 the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
 and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively.
 """
-(ds(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
+(ds(𝐻::nobleGasHeat{𝕡,𝕩},
     Ti::T_amt{𝕡,𝕩},
     Tf::T_amt{𝕡,𝕩},
     Pi::P_amt{𝕡,𝕩},
     Pf::P_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
     ds(cp(𝐻, B) * log(Tf/Ti) - R_(𝐻, B) * log(Pf/Pi))
 end
 
-(ds(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
+(ds(𝐻::nobleGasHeat{𝕡,𝕩},
     Pi::P_amt{𝕡,𝕩},
     Pf::P_amt{𝕡,𝕩},
     Ti::T_amt{𝕡,𝕩},
     Tf::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
     ds(𝐻, Ti, Tf, Pi, Pf, B)
 end
 
 # Fallback versions with <:EoSPair input types
-(ds(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
+(ds(𝐻::nobleGasHeat{𝕡,𝕩},
     𝑖::TPPair{𝕡,𝕩}, # initial (T, P)
     𝑓::TPPair{𝕡,𝕩}, # final (T, P)
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.P, 𝑓.P, B)
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.P, 𝑓.P, B)
 
 """
 `(ds(𝐻::nobleGasHeat{𝕡,𝕩,𝕓𝔸},
@@ -489,7 +489,7 @@ end
     ds(𝐻, Ti, Tf, vi, vf, B)    # fallback
 end
 
-# Fallback versions with <:EoSPair input types
+# Fallback versions with <:ChFPair input types
 (ds(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
     𝑖::TvPair{𝕡,𝕩}, # initial (T, v)
     𝑓::TvPair{𝕡,𝕩}, # final (T, v)
