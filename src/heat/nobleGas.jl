@@ -230,7 +230,7 @@ the substance with specific heat modeled by `𝐻`, making base conversion only 
 Returns the particular gas specific heat ratio for the substance with specific heat modeled by
 `𝐻`, without conversions.
 """
-(ga(𝐻::nobleGasHeat{𝕡,𝕩})::gaamt{𝕡,𝕩}) where {𝕡,𝕩} = ga(cp(𝐻, 𝕓)/cv(𝐻, 𝕓))
+(ga(𝐻::nobleGasHeat{𝕡,𝕩})::gaamt{𝕡,𝕩}) where {𝕡,𝕩} = ga(cp(𝐻)/cv(𝐻))
 
 # Temperature specifying method
 (ga(𝐻::nobleGasHeat{𝕡,𝕩}, T::T_amt{𝕡,𝕩})::gaamt{𝕡,𝕩}) where {𝕡,𝕩} = ga(𝐻)

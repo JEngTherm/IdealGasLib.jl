@@ -5,19 +5,19 @@
 import Base: show
 
 # Type declaration
-struct idealGas{ℍ<:Heat{𝕡,𝕩}} <: Substance{𝕡,𝕩}
+struct idealGas{𝕡,𝕩,ℍ} <: Substance{𝕡,𝕩}
 	name::String        # The substance name
     form::String        # The chemical formula
     heat::ℍ             # The heat capacity model
     # Inner copy constructor
     idealGas(x::idealGas{ℍ}) where {ℍ<:Heat{𝕡,𝕩}} where {𝕡,𝕩} = begin
-        new{ℍ}(x.name, x.form, x.heat)
+        new{𝕡,𝕩,ℍ}(x.name, x.form, x.heat)
     end
     # Inner checking & promoting constructor
     idealGas(NAM::AbstractString,
              FOR::AbstractString,
              CPM::ℍ) where {ℍ<:Heat{𝕡,𝕩}} where {𝕡,𝕩} = begin
-        new{ℍ}(NAM, FOR, CPM)
+        new{𝕡,𝕩,ℍ}(NAM, FOR, CPM)
     end
 end
 

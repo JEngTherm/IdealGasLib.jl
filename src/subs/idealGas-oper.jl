@@ -2,21 +2,24 @@
 #                                    subs/idealGas-oper.jl                                     #
 #----------------------------------------------------------------------------------------------#
 
-# Metaprogramming on the underlying specific heat model
-for FUN in (:+,:-)
-    fun = String(FUN)
-    @eval $FUN(x::idealGas, y::idealGas, args::Any...) = 
-        idealGas(x.name*String($fun)*y.name,
-                 x.form*String($fun)*y.form,
-                 ($FUN)(x.heat, y.heat, args...))
-end
+#······························································································#
+#                                          Inquiring                                           #
+#······························································································#
 
-for FUN in (:*,:/)
-    fun = String(FUN)
-    @eval $FUN(x::idealGas, args::Any...) = 
-        idealGas(x.name*String($fun)*args[1],
-                 x.form*String($fun)*args[1],
-                 ($FUN)(x.heat, args...))
-end
+import EngThermBase: precof, exacof
+
+"""
+`precof(::Type{𝕋} | x::𝕋) where 𝕋<:Medium{𝕡} where 𝕡 = 𝕡`\n
+Returns the precision of the `Medium` subtype or instance as a `DataType`.
+"""
+precof(::Type{𝕋}) where 𝕋<:Medium{𝕡} where 𝕡 = 𝕡
+precof(x::𝕋) where 𝕋<:Medium{𝕡} where 𝕡 = 𝕡
+
+"""
+`exacof(::Type{𝕋} | x::𝕋) where 𝕋<:Medium{𝕡} where 𝕡 = 𝕡`\n
+Returns the exactness of the `Medium` subtype or instance as a `DataType`.
+"""
+exacof(::Type{𝕋}) where 𝕋<:Medium{𝕡,𝕩} where {𝕡,𝕩} = 𝕩
+exacof(x::𝕋) where 𝕋<:Medium{𝕡,𝕩} where {𝕡,𝕩} = 𝕩
 
 
