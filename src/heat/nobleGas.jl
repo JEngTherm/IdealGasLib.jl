@@ -334,8 +334,8 @@ end
 
 # Fallback method with hasTPair arguments
 (Δh(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒾::hasTPair{𝕡,𝕩},
-    𝒻::hasTPair{𝕡,𝕩},
+    𝒾::hasT{𝕡,𝕩},
+    𝒻::hasT{𝕡,𝕩},
     B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Δh(𝐻, 𝒾.T, 𝒻.T, B)
 
 # Alias
@@ -347,22 +347,22 @@ dh = Δh
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(h_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-     theT::T_amt{𝕡,𝕩},
+`(h_(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒯::T_amt{𝕡,𝕩},
      B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B})`\n
 Returns the particular gas specific enthalpy in the specified or default base for the substance
-with specific heat modeled by `𝐻`, for states with temperature `theT`.
+with specific heat modeled by `𝐻`, for states with temperature `𝒯`.
 """
-(h_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    theT::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
-    h_(Δh(𝐻, Tref(𝐻), theT, B) + R_(𝐻, B) * Tref(𝐻))
+(h_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    h_(Δh(𝐻, Tref(𝐻), 𝒯, B) + R_(𝐻, B) * Tref(𝐻))
 end
 
 # Fallback method with hasTPair arguments
-(h_(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-    𝒫::hasTPair{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = h_(𝐻, 𝒫.T, B)
+(h_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒯::hasT{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = h_(𝐻, 𝒯.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -370,26 +370,26 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 """
-`(Δs°(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-      Ti::T_amt{𝕡,𝕩},
-      Tf::T_amt{𝕡,𝕩},
-      B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓}`\n
+`(Δs°(𝐻::nobleGasHeat{𝕡,𝕩},
+      𝒾::T_amt{𝕡,𝕩},
+      𝒻::T_amt{𝕡,𝕩},
+      B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩}`\n
 Returns the particular gas variation in ideal gas partial specific entropy in the specified or
 default base for the substance with specific heat modeled by `𝐻`, for process with initial and
-final temperatures of `Ti` and `Tf`, respectively.
+final temperatures of `𝒾` and `𝒻`, respectively.
 """
-(Δs°(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-     Ti::T_amt{𝕡,𝕩},
-     Tf::T_amt{𝕡,𝕩},
-     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
-    ds(cp(𝐻, B) * log(Tf/Ti))
+(Δs°(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒾::T_amt{𝕡,𝕩},
+     𝒻::T_amt{𝕡,𝕩},
+     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    ds(cp(𝐻, B) * log(𝒻/𝒾))
 end
 
 # Fallback method with hasTPair arguments
-(Δs°(𝐻::nobleGasHeat{𝕡,𝕩,𝕓},
-     𝒫i::hasTPair{𝕡,𝕩},
-     𝒫f::hasTPair{𝕡,𝕩},
-     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = Δs°(𝐻, 𝒫i.T, 𝒫f.T, B)
+(Δs°(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒾::hasT{𝕡,𝕩},
+     𝒻::hasT{𝕡,𝕩},
+     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Δs°(𝐻, 𝒾.T, 𝒻.T, B)
 
 # Alias
 ds0 = Δs°
