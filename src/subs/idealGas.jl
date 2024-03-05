@@ -73,7 +73,9 @@ P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::P_amt{�
 
 """
 `P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩}`\n
-Returns the pressure for the ideal gas `x` at specified temperature `T` and specific volume `v`. Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}` model sets the return value precision and exactness, `{𝕡,𝕩}` instead of performing data type promotions.
+Returns the pressure for the ideal gas `x` at specified temperature `T` and specific volume `v`.
+Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}` model sets the return value precision
+and exactness, `{𝕡,𝕩}` instead of performing data type promotions.
 """
 P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     T = T_amt{𝕡,𝕩}(T)
@@ -86,6 +88,25 @@ P_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕣,𝕫}, T::T_amt{𝕢,𝕪})::P_amt{𝕡
     P_(x, T, v)
 end
 
+# Other signatures
+P_(x::idealGas{𝕡,𝕩},
+   v::v_amt{𝕣,𝕫}, 𝒯::hasT{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, v, 𝒯.T)
+P_(x::idealGas{𝕡,𝕩},
+   𝒯::hasT{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, v, 𝒯.T)
+
+P_(x::idealGas{𝕡,𝕩},
+   𝓋::hasv{𝕣,𝕫}, T::T_amt{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, T)
+P_(x::idealGas{𝕡,𝕩},
+   T::T_amt{𝕢,𝕪}, 𝓋::hasv{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, T)
+
+P_(x::idealGas{𝕡,𝕩},
+   𝓋::hasv{𝕣,𝕫}, 𝒯::hasT{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, 𝒯.T)
+P_(x::idealGas{𝕡,𝕩},
+   𝒯::hasT{𝕢,𝕪}, 𝓋::hasv{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, 𝒯.T)
+
+P_(x::idealGas{𝕡,𝕩},
+   þ::TvPair{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕩,𝕪} = P_(x, þ.v, þ.T)
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #                      Temperature Functions                       #
@@ -96,7 +117,9 @@ T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::T_amt{�
 
 """
 `T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩}`\n
-Returns the temperature for the ideal gas `x` at specified pressure `P` and specific volume `v`. Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}` model sets the return value precision and exactness, `{𝕡,𝕩}` instead of performing data type promotions.
+Returns the temperature for the ideal gas `x` at specified pressure `P` and specific volume `v`.
+Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}` model sets the return value precision
+and exactness, `{𝕡,𝕩}` instead of performing data type promotions.
 """
 T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     P = P_amt{𝕡,𝕩}(P)
@@ -121,7 +144,8 @@ v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MA})::v_amt{𝕡,𝕩,MO} where {�
 
 """
 `v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO}`\n
-Returns the `x::idealGas{𝕡,𝕩}` specific volume as `v_amt{𝕡,𝕩,MO}`, thus adopting the model's precision and exactness rather than doing promotions.
+Returns the `x::idealGas{𝕡,𝕩}` specific volume as `v_amt{𝕡,𝕩,MO}`, thus adopting the model's
+precision and exactness rather than doing promotions.
 """
 v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase} = begin
     v = v_amt{𝕡,𝕩,BA}(v)
@@ -143,8 +167,48 @@ v_(x::idealGas{𝕡,𝕩},
 v_(x::idealGas{𝕡,𝕩},
    P::P_amt{𝕡,𝕩},
    T::T_amt{𝕡,𝕩},
-   B<:IntBase = DEF[:IB])::v_amt{𝕡,𝕩,B} = 
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕩} = v_(x, P, T, B)    # fallback
 
+# Different precision and/or exactness
+v_(x::idealGas{𝕡,𝕩},
+   P::P_amt{𝕢,𝕪},
+   T::T_amt{𝕣,𝕫},
+   B::Type{MO})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    P = P_amt{𝕡,𝕩}(P)
+    T = T_amt{𝕡,𝕩}(T)
+    return v_(x, P, T, MO)
+end
+
+v_(x::idealGas{𝕡,𝕩},
+   P::P_amt{𝕢,𝕪},
+   T::T_amt{𝕣,𝕫},
+   B::Type{MA})::v_amt{𝕡,𝕩,MA} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    P = P_amt{𝕡,𝕩}(P)
+    T = T_amt{𝕡,𝕩}(T)
+    return v_(x, P, T, MA)
+end
+
+"""
+`v_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, T::T_amt{𝕣,𝕫}, B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}`\n
+Returns the specific volume (at base `B`) for the ideal gas `x` at specified pressure `P` and
+temperature `T`.  Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}` model sets the return
+value precision and exactness, `{𝕡,𝕩}` instead of performing data type promotions. If ommitted,
+the base `B` defaults to `DEF[:IB]` (from `EngThermBase`).
+"""
+v_(x::idealGas{𝕡,𝕩},
+   P::P_amt{𝕢,𝕪},
+   T::T_amt{𝕣,𝕫},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    P = P_amt{𝕡,𝕩}(P)
+    T = T_amt{𝕡,𝕩}(T)
+    return v_(x, P, T, B)
+end
+
+# Out-of order methods
+v_(x::idealGas{𝕡,𝕩},
+   T::T_amt{𝕣,𝕫},
+   P::P_amt{𝕢,𝕪},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, T, B)
 
 
 #----------------------------------------------------------------------------------------------#
