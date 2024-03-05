@@ -69,7 +69,7 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 # Fallback method, with uniform PREC, EXAC:
-P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::P_amt{𝕡,𝕩} = RT(x, T, MO) / v
+P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::P_amt{𝕡,𝕩} = Pv(x, T, MO) / v
 
 """
 `P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩}`\n
@@ -78,12 +78,36 @@ Returns the pressure for the ideal gas `x` at specified temperature `T` and spec
 P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     T = T_amt{𝕡,𝕩}(T)
     v = v_(x, v)
-    return RT(x, T, MO) / v
+    return P_(x, T, v)      # fallback
 end
+
+# Out-of order methods
+P_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕣,𝕫}, T::T_amt{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    P_(x, T, v)
+end
+
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #                      Temperature Functions                       #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
+
+# Fallback method, with uniform PREC, EXAC:
+T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::T_amt{𝕡,𝕩} = P * v / R_(x, MO)
+
+"""
+`T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩}`\n
+Returns the temperature for the ideal gas `x` at specified pressure `P` and specific volume `v`. Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}` model sets the return value precision and exactness, `{𝕡,𝕩}` instead of performing data type promotions.
+"""
+T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    P = P_amt{𝕡,𝕩}(P)
+    v = v_(x, v)
+    return T_(x, P, v)      # fallback
+end
+
+# Out-of order methods
+T_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕣,𝕫}, P::P_amt{𝕢,𝕪})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    T_(x, P, v)
+end
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -91,8 +115,36 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 # Base standardization methods
-v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::v_amt{𝕡,𝕩,MO} = v
-v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MA})::v_amt{𝕡,𝕩,MO} = v * m_(x)
+# Fallback methods, with uniform PREC, EXAC:
+v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕩} = v
+v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MA})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕩} = v * m_(x)
+
+"""
+`v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO}`\n
+Returns the `x::idealGas{𝕡,𝕩}` specific volume as `v_amt{𝕡,𝕩,MO}`, thus adopting the model's precision and exactness rather than doing promotions.
+"""
+v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase} = begin
+    v = v_amt{𝕡,𝕩,BA}(v)
+    return v_(x, v)     # fallback
+end
+
+# Ideal Gas calculation methods
+# Fallback method, with uniform PREC, EXAC:
+v_(x::idealGas{𝕡,𝕩},
+   P::P_amt{𝕡,𝕩},
+   T::T_amt{𝕡,𝕩},
+   B::Type{MO})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕩} = RT(x, T, MO) / P
+
+v_(x::idealGas{𝕡,𝕩},
+   P::P_amt{𝕡,𝕩},
+   T::T_amt{𝕡,𝕩},
+   B::Type{MA})::v_amt{𝕡,𝕩,MA} where {𝕡,𝕩} = RT(x, T, MA) / P
+
+v_(x::idealGas{𝕡,𝕩},
+   P::P_amt{𝕡,𝕩},
+   T::T_amt{𝕡,𝕩},
+   B<:IntBase = DEF[:IB])::v_amt{𝕡,𝕩,B} = 
+
 
 
 #----------------------------------------------------------------------------------------------#
