@@ -3,6 +3,7 @@
 #----------------------------------------------------------------------------------------------#
 
 import Base: show
+import EngThermBase: P_, T_, v_
 
 # Type declaration
 struct idealGas{𝕡,𝕩,ℍ} <: Substance{𝕡,𝕩}
@@ -69,45 +70,45 @@ end
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 # Fallback method, with uniform PREC, EXAC:
-P_(x::idealGas{𝕡,𝕩},
-   T::T_amt{𝕡,𝕩},
-   v::v_amt{𝕡,𝕩,MO})::P_amt{𝕡,𝕩} where {𝕡,𝕩} = Pv(x, T, MO) / v
+(P_(x::idealGas{𝕡,𝕩},
+    T::T_amt{𝕡,𝕩},
+    v::v_amt{𝕡,𝕩,MO})::P_amt{𝕡,𝕩}) where {𝕡,𝕩} = Pv(x, T, MO) / v
 
 """
-`P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩}`\n
+`(P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫}`\n
 Returns the pressure for the ideal gas `x` at specified temperature `T` and specific volume `v`.
 Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}` model sets the return value precision
 and exactness, `{𝕡,𝕩}` instead of performing data type promotions.
 """
-P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+(P_(x::idealGas{𝕡,𝕩}, T::T_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     T = T_amt{𝕡,𝕩}(T)
     v = v_(x, v)
     return P_(x, T, v)      # fallback
 end
 
 # Out-of order methods
-P_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕣,𝕫}, T::T_amt{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+(P_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕣,𝕫}, T::T_amt{𝕢,𝕪})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     P_(x, T, v)
 end
 
 # Other signatures
-P_(x::idealGas{𝕡,𝕩},
-   v::v_amt{𝕣,𝕫}, 𝒯::hasT{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, v, 𝒯.T)
-P_(x::idealGas{𝕡,𝕩},
-   𝒯::hasT{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, v, 𝒯.T)
+(P_(x::idealGas{𝕡,𝕩},
+    v::v_amt{𝕣,𝕫}, 𝒯::hasT{𝕢,𝕪})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, v, 𝒯.T)
+(P_(x::idealGas{𝕡,𝕩},
+    𝒯::hasT{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, v, 𝒯.T)
 
-P_(x::idealGas{𝕡,𝕩},
-   𝓋::hasv{𝕣,𝕫}, T::T_amt{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, T)
-P_(x::idealGas{𝕡,𝕩},
-   T::T_amt{𝕢,𝕪}, 𝓋::hasv{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, T)
+(P_(x::idealGas{𝕡,𝕩},
+    𝓋::hasv{𝕣,𝕫}, T::T_amt{𝕢,𝕪})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, T)
+(P_(x::idealGas{𝕡,𝕩},
+    T::T_amt{𝕢,𝕪}, 𝓋::hasv{𝕣,𝕫})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, T)
 
-P_(x::idealGas{𝕡,𝕩},
-   𝓋::hasv{𝕣,𝕫}, 𝒯::hasT{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, 𝒯.T)
-P_(x::idealGas{𝕡,𝕩},
-   𝒯::hasT{𝕢,𝕪}, 𝓋::hasv{𝕣,𝕫})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, 𝒯.T)
+(P_(x::idealGas{𝕡,𝕩},
+    𝓋::hasv{𝕣,𝕫}, 𝒯::hasT{𝕢,𝕪})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, 𝒯.T)
+(P_(x::idealGas{𝕡,𝕩},
+    𝒯::hasT{𝕢,𝕪}, 𝓋::hasv{𝕣,𝕫})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = P_(x, 𝓋.v, 𝒯.T)
 
-P_(x::idealGas{𝕡,𝕩},
-   þ::TvPair{𝕢,𝕪})::P_amt{𝕡,𝕩} where {𝕡,𝕢,𝕩,𝕪} = P_(x, þ.v, þ.T)
+(P_(x::idealGas{𝕡,𝕩},
+    þ::TvPair{𝕢,𝕪})::P_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = P_(x, þ.v, þ.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -115,45 +116,45 @@ P_(x::idealGas{𝕡,𝕩},
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
 # Fallback method, with uniform PREC, EXAC:
-T_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕡,𝕩},
-   v::v_amt{𝕡,𝕩,MO})::T_amt{𝕡,𝕩} where {𝕡,𝕩} = P * v / R_(x, MO)
+(T_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕡,𝕩},
+    v::v_amt{𝕡,𝕩,MO})::T_amt{𝕡,𝕩}) where {𝕡,𝕩} = P * v / R_(x, MO)
 
 """
-`T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩}`\n
+`(T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫}`\n
 Returns the temperature for the ideal gas `x` at specified pressure `P` and specific volume `v`.
 Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}` model sets the return value precision
 and exactness, `{𝕡,𝕩}` instead of performing data type promotions.
 """
-T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+(T_(x::idealGas{𝕡,𝕩}, P::P_amt{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     P = P_amt{𝕡,𝕩}(P)
     v = v_(x, v)
     return T_(x, P, v)      # fallback
 end
 
 # Out-of order methods
-T_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕣,𝕫}, P::P_amt{𝕢,𝕪})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+(T_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕣,𝕫}, P::P_amt{𝕢,𝕪})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     T_(x, P, v)
 end
 
 # Other signatures
-T_(x::idealGas{𝕡,𝕩},
-   𝒫::hasP{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, 𝒫.P, v)
-T_(x::idealGas{𝕡,𝕩},
-   v::v_amt{𝕣,𝕫}, 𝒫::hasP{𝕢,𝕪})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, 𝒫.P, v)
+(T_(x::idealGas{𝕡,𝕩},
+    𝒫::hasP{𝕢,𝕪}, v::v_amt{𝕣,𝕫})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, 𝒫.P, v)
+(T_(x::idealGas{𝕡,𝕩},
+    v::v_amt{𝕣,𝕫}, 𝒫::hasP{𝕢,𝕪})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, 𝒫.P, v)
 
-T_(x::idealGas{𝕡,𝕩},
-   𝓋::hasv{𝕢,𝕪}, P::P_amt{𝕣,𝕫})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, P, 𝓋.v)
-T_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕣,𝕫}, 𝓋::hasv{𝕢,𝕪})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, P, 𝓋.v)
+(T_(x::idealGas{𝕡,𝕩},
+    𝓋::hasv{𝕢,𝕪}, P::P_amt{𝕣,𝕫})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, P, 𝓋.v)
+(T_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕣,𝕫}, 𝓋::hasv{𝕢,𝕪})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, P, 𝓋.v)
 
-T_(x::idealGas{𝕡,𝕩},
-   𝒫::hasP{𝕣,𝕫}, 𝓋::hasv{𝕢,𝕪})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, 𝒫.P, 𝓋.v)
-T_(x::idealGas{𝕡,𝕩},
-   𝓋::hasv{𝕢,𝕪}, 𝒫::hasP{𝕣,𝕫})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, 𝒫.P, 𝓋.v)
+(T_(x::idealGas{𝕡,𝕩},
+    𝒫::hasP{𝕣,𝕫}, 𝓋::hasv{𝕢,𝕪})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, 𝒫.P, 𝓋.v)
+(T_(x::idealGas{𝕡,𝕩},
+    𝓋::hasv{𝕢,𝕪}, 𝒫::hasP{𝕣,𝕫})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = T_(x, 𝒫.P, 𝓋.v)
 
-T_(x::idealGas{𝕡,𝕩},
-   þ::PvPair{𝕢,𝕪})::T_amt{𝕡,𝕩} where {𝕡,𝕢,𝕩,𝕪} = T_(x, þ.P, þ.v)
+(T_(x::idealGas{𝕡,𝕩},
+    þ::PvPair{𝕢,𝕪})::T_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = T_(x, þ.P, þ.v)
 
 
 
@@ -163,50 +164,50 @@ T_(x::idealGas{𝕡,𝕩},
 
 # Base standardization methods
 # Fallback methods, with uniform PREC, EXAC:
-v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕩} = v
-v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MA})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕩} = v * m_(x)
+(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕩} = v
+(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MA})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕩} = v * m_(x)
 
 """
-`v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO}`\n
+`(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase}`\n
 Returns the `x::idealGas{𝕡,𝕩}` specific volume as `v_amt{𝕡,𝕩,MO}`, thus adopting the model's
 precision and exactness rather than doing promotions.
 """
-v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase} = begin
+(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase} = begin
     v = v_amt{𝕡,𝕩,BA}(v)
     return v_(x, v)     # fallback
 end
 
 # Ideal Gas calculation methods
 # Fallback method, with uniform PREC, EXAC:
-v_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕡,𝕩},
-   T::T_amt{𝕡,𝕩},
-   B::Type{MO})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕩} = RT(x, T, MO) / P
+(v_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕡,𝕩},
+    T::T_amt{𝕡,𝕩},
+    B::Type{MO})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕩} = RT(x, T, MO) / P
 
-v_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕡,𝕩},
-   T::T_amt{𝕡,𝕩},
-   B::Type{MA})::v_amt{𝕡,𝕩,MA} where {𝕡,𝕩} = RT(x, T, MA) / P
+(v_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕡,𝕩},
+    T::T_amt{𝕡,𝕩},
+    B::Type{MA})::v_amt{𝕡,𝕩,MA}) where {𝕡,𝕩} = RT(x, T, MA) / P
 
-v_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕡,𝕩},
-   T::T_amt{𝕡,𝕩},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕩} = v_(x, P, T, B)    # fallback
+(v_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕡,𝕩},
+    T::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = v_(x, P, T, B)    # fallback
 
 # Different precision and/or exactness
-v_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕢,𝕪},
-   T::T_amt{𝕣,𝕫},
-   B::Type{MO})::v_amt{𝕡,𝕩,MO} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+(v_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕢,𝕪},
+    T::T_amt{𝕣,𝕫},
+    B::Type{MO})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     P = P_amt{𝕡,𝕩}(P)
     T = T_amt{𝕡,𝕩}(T)
     return v_(x, P, T, MO)
 end
 
-v_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕢,𝕪},
-   T::T_amt{𝕣,𝕫},
-   B::Type{MA})::v_amt{𝕡,𝕩,MA} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+(v_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕢,𝕪},
+    T::T_amt{𝕣,𝕫},
+    B::Type{MA})::v_amt{𝕡,𝕩,MA}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     P = P_amt{𝕡,𝕩}(P)
     T = T_amt{𝕡,𝕩}(T)
     return v_(x, P, T, MA)
@@ -219,52 +220,52 @@ temperature `T`.  Contrary to most `julia` methods, the `x::idealGas{𝕡,𝕩}`
 value precision and exactness, `{𝕡,𝕩}` instead of performing data type promotions. If ommitted,
 the base `B` defaults to `DEF[:IB]` (from `EngThermBase`).
 """
-v_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕢,𝕪},
-   T::T_amt{𝕣,𝕫},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+(v_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕢,𝕪},
+    T::T_amt{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     P = P_amt{𝕡,𝕩}(P)
     T = T_amt{𝕡,𝕩}(T)
     return v_(x, P, T, B)
 end
 
 # Out-of order methods
-v_(x::idealGas{𝕡,𝕩},
-   T::T_amt{𝕣,𝕫},
-   P::P_amt{𝕢,𝕪},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, T, B)
+(v_(x::idealGas{𝕡,𝕩},
+    T::T_amt{𝕣,𝕫},
+    P::P_amt{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, T, B)
 
 # Other signatures
-v_(x::idealGas{𝕡,𝕩},
-   𝒫::hasP{𝕢,𝕪},
-   T::T_amt{𝕣,𝕫},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, T, B)
-v_(x::idealGas{𝕡,𝕩},
-   T::T_amt{𝕣,𝕫},
-   𝒫::hasP{𝕢,𝕪},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, T, B)
+(v_(x::idealGas{𝕡,𝕩},
+    𝒫::hasP{𝕢,𝕪},
+    T::T_amt{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, T, B)
+(v_(x::idealGas{𝕡,𝕩},
+    T::T_amt{𝕣,𝕫},
+    𝒫::hasP{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, T, B)
 
-v_(x::idealGas{𝕡,𝕩},
-   P::P_amt{𝕢,𝕪},
-   𝒯::hasT{𝕣,𝕫},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, 𝒯.T, B)
-v_(x::idealGas{𝕡,𝕩},
-   𝒯::hasT{𝕣,𝕫},
-   P::P_amt{𝕢,𝕪},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, 𝒯.T, B)
+(v_(x::idealGas{𝕡,𝕩},
+    P::P_amt{𝕢,𝕪},
+    𝒯::hasT{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, 𝒯.T, B)
+(v_(x::idealGas{𝕡,𝕩},
+    𝒯::hasT{𝕣,𝕫},
+    P::P_amt{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, 𝒯.T, B)
 
-v_(x::idealGas{𝕡,𝕩},
-   𝒫::hasP{𝕢,𝕪},
-   𝒯::hasT{𝕣,𝕫},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, 𝒯.T, B)
-v_(x::idealGas{𝕡,𝕩},
-   𝒯::hasT{𝕣,𝕫},
-   𝒫::hasP{𝕢,𝕪},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, 𝒯.T, B)
+(v_(x::idealGas{𝕡,𝕩},
+    𝒫::hasP{𝕢,𝕪},
+    𝒯::hasT{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, 𝒯.T, B)
+(v_(x::idealGas{𝕡,𝕩},
+    𝒯::hasT{𝕣,𝕫},
+    𝒫::hasP{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, 𝒯.T, B)
 
-v_(x::idealGas{𝕡,𝕩},
-   þ::TPPair{𝕢,𝕪},
-   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, þ.P, þ.T, B)
+(v_(x::idealGas{𝕡,𝕩},
+    þ::TPPair{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = v_(x, þ.P, þ.T, B)
 
 
 #----------------------------------------------------------------------------------------------#
