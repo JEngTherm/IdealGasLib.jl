@@ -173,8 +173,20 @@ Returns the `x::idealGas{𝕡,𝕩}` specific volume as `v_amt{𝕡,𝕩,MO}`, t
 precision and exactness rather than doing promotions.
 """
 (v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase} = begin
-    v = v_amt{𝕡,𝕩,BA}(v)
-    return v_(x, v)     # fallback
+    if 𝕪 == MM
+        if 𝕩 == MM
+            valv = Measurement{𝕡}(bare(v))  # Transports uncertainty
+        else
+            valv = 𝕡(pod(v))                # Ignores uncertainty
+        end
+    else
+        if 𝕩 == MM
+            valv = Measurement{𝕡}(bare(v))  # Initializes uncertainty = zero(𝕡)
+        else
+            valv = 𝕡(pod(v))                # No uncertainty
+        end
+    end
+    return v_(x, v_amt{𝕡,𝕩,BA}(valv))       # fallback
 end
 
 # Ideal Gas calculation methods
