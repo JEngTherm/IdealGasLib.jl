@@ -37,7 +37,7 @@ How to cite this project:
   journal      = {GitHub repository},
   publisher    = {GitHub},
   url          = {https://github.com/JEngTherm/IdealGasLib.jl},
-  note         = {release 0.1.0 of 23-09-07},
+  note         = {release 0.2.0 of 24-03-05},
 }
 ```
 

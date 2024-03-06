@@ -1,7 +1,7 @@
 name = "IdealGasLib"
 uuid = "8ea2701e-a7f2-4ad3-bde6-f1a1a263bda4"
 authors = ["C. Naaktgeboren <NaaktgeborenC.PhD@gmail.com>"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 EngThermBase = "dffbff30-506a-45ba-b474-e78cc8ad254e"
