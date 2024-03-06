@@ -118,7 +118,7 @@ end
         𝑇::T_amt{𝕡,𝕩})::nobleGasHeat{𝕡,𝕩}) where {𝕡,𝕩} = rebase(𝐻, 𝑇, 𝑃)
 
 (rebase(𝐻::nobleGasHeat{𝕡,𝕩},
-        st::TPPair{𝕡,𝕩})::nobleGasHeat{𝕡,𝕩}) where {𝕡,𝕩} = rebase(𝐻, st.T, st.P)
+        þ::TPPair{𝕡,𝕩})::nobleGasHeat{𝕡,𝕩}) where {𝕡,𝕩} = rebase(𝐻, þ.T, þ.P)
 
 export rebase
 
@@ -178,17 +178,11 @@ the substance with specific heat modeled by `𝐻`, making base conversion only 
 (cp(𝐻::nobleGasHeat{𝕡,𝕩},
     T::T_amt{𝕡,𝕩},
     B::Type{<:IntBase} = DEF[:IB])::cpamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cp(𝐻, B)
-(cp(𝐻::nobleGasHeat{𝕡,𝕩},
-    B::Type{<:IntBase},
-    T::T_amt{𝕡,𝕩})::cpamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cp(𝐻, B)
 
 # Fallback temperature specifying methods though T-Combos (Pairs/Trios).
 (cp(𝐻::nobleGasHeat{𝕡,𝕩},
     𝒯::hasT{𝕡,𝕩},
     B::Type{<:IntBase} = DEF[:IB])::cpamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cp(𝐻, B)
-(cp(𝐻::nobleGasHeat{𝕡,𝕩},
-    B::Type{<:IntBase},
-    𝒯::hasT{𝕡,𝕩})::cpamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cp(𝐻, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -208,17 +202,11 @@ the substance with specific heat modeled by `𝐻`, making base conversion only 
 (cv(𝐻::nobleGasHeat{𝕡,𝕩},
     T::T_amt{𝕡,𝕩},
     B::Type{<:IntBase} = DEF[:IB])::cvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cv(𝐻, B)
-(cv(𝐻::nobleGasHeat{𝕡,𝕩},
-    B::Type{<:IntBase},
-    T::T_amt{𝕡,𝕩})::cvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cv(𝐻, B)
 
 # Fallback temperature specifying methods though T-Pairs.
 (cv(𝐻::nobleGasHeat{𝕡,𝕩},
     𝒯::hasT{𝕡,𝕩},
     B::Type{<:IntBase} = DEF[:IB])::cvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cv(𝐻, B)
-(cv(𝐻::nobleGasHeat{𝕡,𝕩},
-    B::Type{<:IntBase},
-    𝒯::hasT{𝕡,𝕩})::cvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cv(𝐻, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
