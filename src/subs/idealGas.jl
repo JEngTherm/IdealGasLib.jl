@@ -230,6 +230,38 @@ v_(x::idealGas{𝕡,𝕩},
    P::P_amt{𝕢,𝕪},
    B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, T, B)
 
+# Other signatures
+v_(x::idealGas{𝕡,𝕩},
+   𝒫::hasP{𝕢,𝕪},
+   T::T_amt{𝕣,𝕫},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, T, B)
+v_(x::idealGas{𝕡,𝕩},
+   T::T_amt{𝕣,𝕫},
+   𝒫::hasP{𝕢,𝕪},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, T, B)
+
+v_(x::idealGas{𝕡,𝕩},
+   P::P_amt{𝕢,𝕪},
+   𝒯::hasT{𝕣,𝕫},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, 𝒯.T, B)
+v_(x::idealGas{𝕡,𝕩},
+   𝒯::hasT{𝕣,𝕫},
+   P::P_amt{𝕢,𝕪},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, P, 𝒯.T, B)
+
+v_(x::idealGas{𝕡,𝕩},
+   𝒫::hasP{𝕢,𝕪},
+   𝒯::hasT{𝕣,𝕫},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, 𝒯.T, B)
+v_(x::idealGas{𝕡,𝕩},
+   𝒯::hasT{𝕣,𝕫},
+   𝒫::hasP{𝕢,𝕪},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, 𝒫.P, 𝒯.T, B)
+
+v_(x::idealGas{𝕡,𝕩},
+   þ::TPPair{𝕢,𝕪},
+   B::Type{<:IntBase} = DEF[:IB])::v_amt{𝕡,𝕩,B} where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = v_(x, þ.P, þ.T, B)
+
 
 #----------------------------------------------------------------------------------------------#
 #                                           Includes                                           #
