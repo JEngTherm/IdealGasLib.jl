@@ -176,13 +176,13 @@ the substance with specific heat modeled by `𝐻`, making base conversion only 
 
 # Temperature specifying methods
 (cp(𝐻::nobleGasHeat{𝕡,𝕩},
-    T::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cp(𝐻, B)
+    T::T_amt{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = cp(𝐻, B)
 
 # Fallback temperature specifying methods though T-Combos (Pairs/Trios).
 (cp(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cp(𝐻, B)
+    𝒯::hasT{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::cpamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = cp(𝐻, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -200,13 +200,13 @@ the substance with specific heat modeled by `𝐻`, making base conversion only 
 
 # Temperature specifying methods
 (cv(𝐻::nobleGasHeat{𝕡,𝕩},
-    T::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cv(𝐻, B)
+    T::T_amt{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = cv(𝐻, B)
 
 # Fallback temperature specifying methods though T-Pairs.
 (cv(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = cv(𝐻, B)
+    𝒯::hasT{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::cvamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = cv(𝐻, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -221,11 +221,12 @@ Returns the particular gas specific heat ratio for the substance with specific h
 (ga(𝐻::nobleGasHeat{𝕡,𝕩})::gaamt{𝕡,𝕩}) where {𝕡,𝕩} = ga(cp(𝐻)/cv(𝐻))
 
 # Temperature specifying method
-(ga(𝐻::nobleGasHeat{𝕡,𝕩}, T::T_amt{𝕡,𝕩})::gaamt{𝕡,𝕩}) where {𝕡,𝕩} = ga(𝐻)
+(ga(𝐻::nobleGasHeat{𝕡,𝕩},
+    T::T_amt{𝕢,𝕪})::gaamt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = ga(𝐻)
 
 # Fallback temperature specifying methods though T-Pairs.
 (ga(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩})::gaamt{𝕡,𝕩}) where {𝕡,𝕩} = ga(𝐻)
+    𝒯::hasT{𝕢,𝕪})::gaamt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = ga(𝐻)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -240,26 +241,19 @@ modeled by `𝐻`, without conversions. For ideal gases, \$k = ga\$.
 (k_(𝐻::nobleGasHeat{𝕡,𝕩})::k_amt{𝕡,𝕩}) where {𝕡,𝕩} = k_(ga(𝐻))  # ga fallback
 
 # Temperature specifying method
-(k_(𝐻::nobleGasHeat{𝕡,𝕩}, T::T_amt{𝕡,𝕩})::k_amt{𝕡,𝕩}) where {𝕡,𝕩} = k_(𝐻)
+(k_(𝐻::nobleGasHeat{𝕡,𝕩},
+    T::T_amt{𝕢,𝕪})::k_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = k_(𝐻)
 
 # Fallback temperature specifying methods though T-Pairs.
 (k_(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩})::k_amt{𝕡,𝕩}) where {𝕡,𝕩} = k_(𝐻)
+    𝒯::hasT{𝕢,𝕪})::k_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = k_(𝐻)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #     Δu: Particular gas variation of specific internal energy     #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
-"""
-`(Δu(𝐻::nobleGasHeat{𝕡,𝕩},
-     i::T_amt{𝕡,𝕩},
-     f::T_amt{𝕡,𝕩},
-     B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩}`\n
-Returns the particular gas variation in specific internal energy in the specified or default
-base for the substance with specific heat modeled by `𝐻`, for process with initial and final
-temperatures of `i` and `f`, respectively.
-"""
+# Type-homogeneous fallback method
 (Δu(𝐻::nobleGasHeat{𝕡,𝕩},
     𝒾::T_amt{𝕡,𝕩},
     𝒻::T_amt{𝕡,𝕩},
@@ -267,11 +261,31 @@ temperatures of `i` and `f`, respectively.
     de(cv(𝐻, B) * (𝒻 - 𝒾))
 end
 
+# Model-driven PREC and EXAC converting (not promoting)
+"""
+`(Δu(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒾::T_amt{𝕢,𝕪},
+     𝒻::T_amt{𝕣,𝕫},
+     B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫}`\n
+Returns the particular gas variation in specific internal energy in the specified or default
+base for the substance with specific heat modeled by `𝐻`, for process with initial and final
+temperatures of `i` and `f`, respectively. Resulting precision, PREC, and exactness, EXAC, are
+model-driven, and not promotion-driven.
+"""
+(Δu(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒾::T_amt{𝕢,𝕪},
+    𝒻::T_amt{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    𝑖 = T_amt{𝕡,𝕩}(𝑖)
+    𝑓 = T_amt{𝕡,𝕩}(𝑓)
+    return Δu(𝐻, 𝑖, 𝑓, B)
+end
+
 # Fallback method with hasTPair arguments
 (Δu(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒾::hasT{𝕡,𝕩},
-    𝒻::hasT{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Δu(𝐻, 𝒾.T, 𝒻.T, B)
+    𝒾::hasT{𝕢,𝕪},
+    𝒻::hasT{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = Δu(𝐻, 𝒾.T, 𝒻.T, B)
 
 # Alias
 du = Δu
@@ -281,38 +295,40 @@ du = Δu
     #            u: Particular gas specific internal energy            #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
+# Type-homogeneous fallback method
+(u_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑇::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    u_(Δu(𝐻, Tref(𝐻), 𝑇, B))
+end
+
+# Model-driven PREC and EXAC converting (not promoting)
 """
 `(u_(𝐻::nobleGasHeat{𝕡,𝕩},
-     theT::T_amt{𝕡,𝕩},
-     B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B})`\n
-Returns the particular gas specific internal energy in the specified or default
-base for the substance with specific heat modeled by `𝐻`, for states with temperature `theT`.
+     𝑇::T_amt{𝕢,𝕪},
+     B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪}`\n
+Returns the particular gas specific internal energy in the specified or default base for the
+substance with specific heat modeled by `𝐻`, for states with temperature `𝑇`. Resulting
+precision, PREC, and exactness, EXAC, are model-driven, and not promotion-driven.
 """
 (u_(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
-    u_(Δu(𝐻, Tref(𝐻), 𝒯, B))
+    𝑇::T_amt{𝕢,𝕪},
+    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = begin
+    𝑇 = T_amt{𝕡,𝕩}(𝑇)
+    return u_(𝐻, 𝑇, B)
 end
 
 # Fallback method with hasTPair arguments
 (u_(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = u_(𝐻, 𝒯.T, B)
+    𝒯::hasT{𝕢,𝕪},
+    B::Type{<:IntBase}=DEF[:IB])::u_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = u_(𝐻, 𝒯.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #        Δh: Particular gas variation of specific enthalpy         #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
-"""
-`(Δh(𝐻::nobleGasHeat{𝕡,𝕩},
-     𝒾::T_amt{𝕡,𝕩},
-     𝒻::T_amt{𝕡,𝕩},
-     B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩}`\n
-Returns the particular gas variation in specific enthalpy in the specified or default base for
-the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
-of `𝒾` and `𝒻`, respectively.
-"""
+# Type-homogeneous fallback method
 (Δh(𝐻::nobleGasHeat{𝕡,𝕩},
     𝒾::T_amt{𝕡,𝕩},
     𝒻::T_amt{𝕡,𝕩},
@@ -320,11 +336,31 @@ of `𝒾` and `𝒻`, respectively.
     de(cp(𝐻, B) * (𝒻 - 𝒾))
 end
 
+# Model-driven PREC and EXAC converting (not promoting)
+"""
+`(Δh(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒾::T_amt{𝕢,𝕪},
+     𝒻::T_amt{𝕣,𝕫},
+     B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫}`\n
+Returns the particular gas variation in specific enthalpy in the specified or default base for
+the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
+of `𝒾` and `𝒻`, respectively. Resulting precision, PREC, and exactness, EXAC, are model-driven,
+and not promotion-driven.
+"""
+(Δh(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝒾::T_amt{𝕢,𝕪},
+    𝒻::T_amt{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    𝑖 = T_amt{𝕡,𝕩}(𝑖)
+    𝑓 = T_amt{𝕡,𝕩}(𝑓)
+    return Δh(𝐻, 𝑖, 𝑓, B)
+end
+
 # Fallback method with hasTPair arguments
 (Δh(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒾::hasT{𝕡,𝕩},
-    𝒻::hasT{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Δh(𝐻, 𝒾.T, 𝒻.T, B)
+    𝒾::hasT{𝕢,𝕪},
+    𝒻::hasT{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::deamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = Δh(𝐻, 𝒾.T, 𝒻.T, B)
 
 # Alias
 dh = Δh
@@ -334,23 +370,33 @@ dh = Δh
     #               h: Particular gas specific enthalpy                #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
-"""
-`(h_(𝐻::nobleGasHeat{𝕡,𝕩},
-     𝒯::T_amt{𝕡,𝕩},
-     B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B})`\n
-Returns the particular gas specific enthalpy in the specified or default base for the substance
-with specific heat modeled by `𝐻`, for states with temperature `𝒯`.
-"""
+# Type-homogeneous fallback method
 (h_(𝐻::nobleGasHeat{𝕡,𝕩},
     𝒯::T_amt{𝕡,𝕩},
     B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
     h_(Δh(𝐻, Tref(𝐻), 𝒯, B) + R_(𝐻, B) * Tref(𝐻))
 end
 
+# Model-driven PREC and EXAC converting (not promoting)
+"""
+`(h_(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝑇::T_amt{𝕢,𝕪},
+     B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪}`\n
+Returns the particular gas specific enthalpy in the specified or default base for the substance
+with specific heat modeled by `𝐻`, for states with temperature `𝑇`. Resulting precision, PREC,
+and exactness, EXAC, are model-driven, and not promotion-driven.
+"""
+(h_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑇::T_amt{𝕢,𝕪},
+    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = begin
+    𝑇 = T_amt{𝕡,𝕩}(𝑇)
+    return h_(𝐻, 𝑇, B)
+end
+
 # Fallback method with hasTPair arguments
 (h_(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = h_(𝐻, 𝒯.T, B)
+    𝑇::hasT{𝕢,𝕪},
+    B::Type{<:IntBase}=DEF[:IB])::h_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = h_(𝐻, 𝑇.T, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
