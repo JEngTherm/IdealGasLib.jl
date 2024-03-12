@@ -456,14 +456,14 @@ end
 """
 `(s°(𝐻::nobleGasHeat{𝕡,𝕩},
      𝑇::T_amt{𝕢,𝕪},
-     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪,B}`\n
+     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪}`\n
 Returns the particular gas specific ideal gas partial entropy in the specified or default base
 for the substance with specific heat modeled by `𝐻`, for states with temperature `𝑇`. Resulting
 precision, PREC, and exactness, EXAC, are model-driven, and not promotion-driven.
 """
 (s°(𝐻::nobleGasHeat{𝕡,𝕩},
     𝑇::T_amt{𝕢,𝕪},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪,B} = begin
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = begin
     𝑇 = T_amt{𝕡,𝕩}(𝑇)
     return s°(𝐻, 𝑇, B)
 end
@@ -471,7 +471,7 @@ end
 # Fallback method with hasTPair arguments
 (s°(𝐻::nobleGasHeat{𝕡,𝕩},
     𝑇::hasT{𝕢,𝕪},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪,B} = s°(𝐻, 𝑇.T, B)
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = s°(𝐻, 𝑇.T, B)
 
 # Alias
 s0 = s°
@@ -507,7 +507,7 @@ end
      Tf::T_amt{𝕣,𝕫},
      Pi::P_amt{𝕟,𝕧},
      Pf::P_amt{𝕠,𝕨},
-     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B}`\n
+     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫}`\n
 Returns the particular gas variation in specific entropy in the specified or default base for
 the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
 and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively. Resulting precision, PREC, and
@@ -518,7 +518,7 @@ exactness, EXAC, are model-driven, and not promotion-driven.
     Tf::T_amt{𝕣,𝕫},
     Pi::P_amt{𝕟,𝕧},
     Pf::P_amt{𝕠,𝕨},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B} = begin
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫} = begin
     Ti = T_amt{𝕡,𝕩}(Ti)
     Tf = T_amt{𝕡,𝕩}(Tf)
     Pi = P_amt{𝕡,𝕩}(Pi)
@@ -530,7 +530,7 @@ end
     Pf::P_amt{𝕠,𝕨},
     Ti::T_amt{𝕢,𝕪},
     Tf::T_amt{𝕣,𝕫},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B} = begin
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫} = begin
     ds(𝐻, Ti, Tf, Pi, Pf, B)
 end
 
@@ -538,7 +538,7 @@ end
 (ds(𝐻::nobleGasHeat{𝕡,𝕩},
     𝑖::TPPair{𝕢,𝕪}, # initial (T, P)
     𝑓::TPPair{𝕣,𝕫}, # final (T, P)
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫,B} = begin
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.P, 𝑓.P, B)
 end
 
@@ -549,7 +549,7 @@ end
     Tf::T_amt{𝕣,𝕫},
     vi::v_amt{𝕟,𝕧,𝕓},
     vf::v_amt{𝕠,𝕨,𝕓},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B}`\n
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫}`\n
 Returns the particular gas variation in specific entropy in the specified or default base for
 the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
 and specific volumes of `Ti` and `Tf`, and `vi` and `vf`, respectively. Resulting precision,
@@ -560,7 +560,7 @@ PREC, and exactness, EXAC, are model-driven, and not promotion-driven.
     Tf::T_amt{𝕣,𝕫},
     vi::v_amt{𝕟,𝕧,𝕓},
     vf::v_amt{𝕠,𝕨,𝕓},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B} = begin
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫} = begin
     Ti = T_amt{𝕡,𝕩}(Ti)
     Tf = T_amt{𝕡,𝕩}(Tf)
     vi = v_amt{𝕡,𝕩,𝕓}(vi)
@@ -573,7 +573,7 @@ end
     vf::v_amt{𝕠,𝕨,𝕓},
     Ti::T_amt{𝕢,𝕪},
     Tf::T_amt{𝕣,𝕫},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B} = begin
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫} = begin
     return ds(𝐻, Ti, Tf, vi, vf, B)    # fallback
 end
 
@@ -611,7 +611,7 @@ precision, PREC, and exactness, EXAC, are model-driven, and not promotion-driven
 (s_(𝐻::nobleGasHeat{𝕡,𝕩},
     𝑇::T_amt{𝕢,𝕪},
     𝑃::P_amt{𝕣,𝕫},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫,B} = begin
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     𝑇 = T_amt{𝕡,𝕩}(𝑇)
     𝑃 = P_amt{𝕡,𝕩}(𝑃)
     return s_(𝐻, 𝑇, 𝑃, B)
@@ -620,7 +620,7 @@ end
 (s_(𝐻::nobleGasHeat{𝕡,𝕩},
     𝑃::P_amt{𝕣,𝕫},
     𝑇::T_amt{𝕢,𝕪},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫,B} = begin
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
     return s_(𝐻, 𝑇, 𝑃, B)
 end
 
