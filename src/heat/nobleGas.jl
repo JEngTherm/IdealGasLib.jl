@@ -590,73 +590,104 @@ end
     #                s: Particular gas specific entropy                #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
+# Type-homogeneous fallback methods
+(s_(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑇::T_amt{𝕡,𝕩},
+    𝑃::P_amt{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    s_(ds(𝐻, Tref(𝐻), 𝑇, Pref(𝐻), 𝑃, B) + sref(𝐻, B))
+end
+
+# Model-driven PREC and EXAC converting (not promoting)
 """
 `(s_(𝐻::nobleGasHeat{𝕡,𝕩},
-     𝒯::T_amt{𝕡,𝕩},
-     𝒫::P_amt{𝕡,𝕩},
+     𝑇::T_amt{𝕢,𝕪},
+     𝑃::P_amt{𝕣,𝕫},
      B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B})`\n
 Returns the particular gas specific entropy in the specified or default base for the substance
-with specific heat modeled by `𝐻`, in the specified thermodynamic state (`𝒯`, `𝒫`).
+with specific heat modeled by `𝐻`, in the specified thermodynamic state (`𝑇`, `𝑃`). Resulting
+precision, PREC, and exactness, EXAC, are model-driven, and not promotion-driven.
 """
 (s_(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::T_amt{𝕡,𝕩},
-    𝒫::P_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
-    s_(ds(𝐻, Tref(𝐻), 𝒯, Pref(𝐻), 𝒫, B) + sref(𝐻, B))
+    𝑇::T_amt{𝕢,𝕪},
+    𝑃::P_amt{𝕣,𝕫},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫,B} = begin
+    𝑇 = T_amt{𝕡,𝕩}(𝑇)
+    𝑃 = P_amt{𝕡,𝕩}(𝑃)
+    return s_(𝐻, 𝑇, 𝑃, B)
 end
 
 (s_(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒫::P_amt{𝕡,𝕩},
-    𝒯::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
-    s_(𝐻, 𝒯, 𝒫, B)
+    𝑃::P_amt{𝕣,𝕫},
+    𝑇::T_amt{𝕢,𝕪},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫,B} = begin
+    return s_(𝐻, 𝑇, 𝑃, B)
 end
 
 # Fallback method with TPPair arguments
 (s_(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒫::TPPair{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = s_(𝐻, 𝒫.T, 𝒫.P, B)
+    þ::TPPair{𝕢,𝕪},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = s_(𝐻, þ.T, þ.P, B)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #               Pr: Particular gas relative pressure               #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
+# Type-homogeneous fallback methods
+(Pr(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑇::T_amt{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩} = begin
+    Pr(exp(s°(𝐻, 𝑇, 𝕓) / R_(𝐻, 𝕓)))
+end
+
+# Model-driven PREC and EXAC converting (not promoting)
 """
 `(Pr(𝐻::nobleGasHeat{𝕡,𝕩},
-     𝒯::T_amt{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩}`\n
+     𝑇::T_amt{𝕢,𝕪})::Pramt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪}`\n
 Returns the particular gas relative pressure for the substance with specific heat modeled by
-`𝐻`, in the specified thermodynamic temperature `𝒯`.
+`𝐻`, in the specified thermodynamic temperature `𝑇`. Resulting precision, PREC, and exactness,
+EXAC, are model-driven, and not promotion-driven.
 """
 (Pr(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::T_amt{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩} = begin
-    Pr(exp(s°(𝐻, 𝒯, 𝕓) / R_(𝐻, 𝕓)))
+    𝑇::T_amt{𝕢,𝕪})::Pramt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = begin
+    𝑇 = T_amt{𝕡,𝕩}(𝑇)
+    return Pr(𝐻, 𝑇)
 end
 
 # Fallback method with hasTPair arguments
 (Pr(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩} = Pr(𝐻, 𝒯.T)
+    𝑇::hasT{𝕢,𝕪})::Pramt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = Pr(𝐻, 𝑇.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
     #                vr: Particular gas relative volume                #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
+# Type-homogeneous fallback methods
+(vr(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑇::T_amt{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩} = begin
+    # The be(𝕡(ℯ)) term is a scale factor to render the numerator dimensionless
+    vr(𝑇 * be(𝕡(ℯ)) / Pr(𝐻, 𝑇))
+end
+
+# Model-driven PREC and EXAC converting (not promoting)
 """
 `(vr(𝐻::nobleGasHeat{𝕡,𝕩},
-     𝒯::T_amt{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩}`\n
+     𝑇::T_amt{𝕢,𝕪})::vramt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪}`\n
 Returns the particular gas relative volume for the substance with specific heat modeled by `𝐻`,
-in the specified thermodynamic temperature `𝒯`.
+in the specified thermodynamic temperature `𝑇`. Resulting precision, PREC, and exactness, EXAC,
+are model-driven, and not promotion-driven.
 """
+# Type-homogeneous fallback methods
 (vr(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::T_amt{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩} = begin
-    # The be(𝕡(ℯ)) term is a scale factor to render the numerator dimensionless
-    vr(𝒯 * be(𝕡(ℯ)) / Pr(𝐻, 𝒯))
+    𝑇::T_amt{𝕢,𝕪})::vramt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = begin
+    𝑇 = T_amt{𝕡,𝕩}(𝑇)
+    return vr(𝐻, 𝑇)
 end
 
 # Fallback method with hasTPair arguments
 (vr(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩})::vramt{𝕡,𝕩}) where {𝕡,𝕩} = vr(𝐻, 𝒯.T)
+    𝑇::hasT{𝕢,𝕪})::vramt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = vr(𝐻, 𝑇.T)
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
