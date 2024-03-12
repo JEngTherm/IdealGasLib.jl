@@ -701,12 +701,22 @@ end
 Returns the particular gas (RT) product based on the provided temperature and optional base.
 """
 (RT(𝐻::nobleGasHeat{𝕡,𝕩},
-    T::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::RTamt{𝕡,𝕩,B}) where {𝕡,𝕩} = R_(𝐻, B) * T
+    𝑇::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase} = DEF[:IB])::RTamt{𝕡,𝕩,B}) where {𝕡,𝕩} = R_(𝐻, B) * 𝑇
 
 (RT(𝐻::nobleGasHeat{𝕡,𝕩},
-    B::Type{<:IntBase},
-    T::T_amt{𝕡,𝕩})::RTamt{𝕡,𝕩,B}) where {𝕡,𝕩} = RT(𝐻, T, B)
+    𝑇::T_amt{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::RTamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = begin
+    𝑇 = T_amt{𝕡,𝕩}(𝑇)
+    return RT(𝐻, 𝑇)
+end
+
+(RT(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑇::hasT{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::RTamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = begin
+    return RT(𝐻, 𝑇.T)
+end
+
 
 
     # !center 64 | frame 64 -f'\#⋅\# ' | center 76
@@ -719,12 +729,21 @@ Returns the particular gas (RT) product based on the provided temperature and op
 Returns the particular gas (Pv) product based on the provided temperature and optional base.
 """
 (Pv(𝐻::nobleGasHeat{𝕡,𝕩},
-    T::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::Pvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Pv(RT(𝐻, T, B))
+    𝑇::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase} = DEF[:IB])::Pvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Pv(RT(𝐻, 𝑇, B))
 
 (Pv(𝐻::nobleGasHeat{𝕡,𝕩},
-    B::Type{<:IntBase},
-    T::T_amt{𝕡,𝕩})::Pvamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Pv(RT(𝐻, T, B))
+    𝑇::T_amt{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::Pvamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = begin
+    𝑇 = T_amt{𝕡,𝕩}(𝑇)
+    return Pv(𝐻, 𝑇, B)
+end
+
+(Pv(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑇::hasT{𝕢,𝕪},
+    B::Type{<:IntBase} = DEF[:IB])::Pvamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪} = begin
+    return Pv(𝐻, 𝑇.T, B)
+end
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
@@ -740,7 +759,7 @@ Returns the particular gas (Pv) product based on the provided temperature and op
 `(Z_(𝐻::nobleGasHeat{𝕡,𝕩}, T::T_amt{𝕡,𝕩})::Z_amt{𝕡,𝕩}) where {𝕡,𝕩}`\n
 Returns the (ideal gas) generalized compressibility factor from it's \$Pv/RT\$ definition.
 """
-(Z_(𝐻::nobleGasHeat{𝕡,𝕩}, T::T_amt{𝕡,𝕩})::Z_amt{𝕡,𝕩}) where {𝕡,𝕩} = Pv(𝐻, T) / RT(𝐻, T)
+(Z_(𝐻::nobleGasHeat{𝕡,𝕩}, 𝑇::T_amt{𝕢,𝕪})::Z_amt{𝕡,𝕩}) where {𝕡,𝕢,𝕩,𝕪} = Pv(𝐻, 𝑇) / RT(𝐻, 𝑇)
 
 
 #----------------------------------------------------------------------------------------------#
