@@ -39,11 +39,11 @@ end
                     P_(𝕡) * f,
                     s_(zero(𝕡) * f, MO),
                 )
-                @test hHe isa nobleGasHeat{𝕡,𝕩,MO}          # expected type {params}
-                @test deco(hHe) == Symbol("noble-c̄p(T)")    # deco independence of {params}
+                @test hHe isa nobleGasHeat{𝕡,𝕩}             # expected type {params}
+                @test deco(hHe) == Symbol("noble-cp(T)")    # deco independence of {params}
                 @test Tref(hHe) == T_(𝕡) * f
                 @test Pref(hHe) == P_(𝕡) * f
-                @test sref(hHe) == s_(zero(𝕡) * f, MO)
+                @test sref(hHe) == s_(zero(𝕡) * f)
             end
         end
     end
