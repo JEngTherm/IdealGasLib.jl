@@ -8,8 +8,8 @@ EngThermBase = "dffbff30-506a-45ba-b474-e78cc8ad254e"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
-julia = "^1.6"
-EngThermBase = "^0.4.2"
+julia = "^1.9"
+EngThermBase = "^0.4.3"
 Reexport = "^1"
 
 [extras]
