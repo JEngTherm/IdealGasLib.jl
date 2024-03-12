@@ -403,15 +403,7 @@ end
     # Δs°: Particular gas variation of ideal gas partial spec. entropy #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
-"""
-`(Δs°(𝐻::nobleGasHeat{𝕡,𝕩},
-      𝒾::T_amt{𝕡,𝕩},
-      𝒻::T_amt{𝕡,𝕩},
-      B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩}`\n
-Returns the particular gas variation in ideal gas partial specific entropy in the specified or
-default base for the substance with specific heat modeled by `𝐻`, for process with initial and
-final temperatures of `𝒾` and `𝒻`, respectively.
-"""
+# Type-homogeneous fallback method
 (Δs°(𝐻::nobleGasHeat{𝕡,𝕩},
      𝒾::T_amt{𝕡,𝕩},
      𝒻::T_amt{𝕡,𝕩},
@@ -419,11 +411,31 @@ final temperatures of `𝒾` and `𝒻`, respectively.
     ds(cp(𝐻, B) * log(𝒻/𝒾))
 end
 
+# Model-driven PREC and EXAC converting (not promoting)
+"""
+`(Δs°(𝐻::nobleGasHeat{𝕡,𝕩},
+      𝒾::T_amt{𝕢,𝕪},
+      𝒻::T_amt{𝕣,𝕫},
+      B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫}`\n
+Returns the particular gas variation in ideal gas partial specific entropy in the specified or
+default base for the substance with specific heat modeled by `𝐻`, for process with initial and
+final temperatures of `𝒾` and `𝒻`, respectively. Resulting precision, PREC, and exactness, EXAC,
+are model-driven, and not promotion-driven.
+"""
+(Δs°(𝐻::nobleGasHeat{𝕡,𝕩},
+     𝒾::T_amt{𝕢,𝕪},
+     𝒻::T_amt{𝕣,𝕫},
+     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = begin
+    𝑖 = T_amt{𝕡,𝕩}(𝑖)
+    𝑓 = T_amt{𝕡,𝕩}(𝑓)
+    return Δs°(𝐻, 𝑖, 𝑓, B)
+end
+
 # Fallback method with hasTPair arguments
 (Δs°(𝐻::nobleGasHeat{𝕡,𝕩},
-     𝒾::hasT{𝕡,𝕩},
-     𝒻::hasT{𝕡,𝕩},
-     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = Δs°(𝐻, 𝒾.T, 𝒻.T, B)
+     𝒾::hasT{𝕢,𝕪},
+     𝒻::hasT{𝕣,𝕫},
+     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫} = Δs°(𝐻, 𝒾.T, 𝒻.T, B)
 
 # Alias
 ds0 = Δs°
@@ -433,23 +445,33 @@ ds0 = Δs°
     #      s°: Particular gas specific ideal gas partial entropy       #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
+# Type-homogeneous fallback method
+(s°(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑇::T_amt{𝕡,𝕩},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
+    s_(Δs°(𝐻, Tref(𝐻), 𝑇, B) + sref(𝐻, B))
+end
+
+# Model-driven PREC and EXAC converting (not promoting)
 """
 `(s°(𝐻::nobleGasHeat{𝕡,𝕩},
-     𝒯::T_amt{𝕡,𝕩},
-     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B})`\n
+     𝑇::T_amt{𝕢,𝕪},
+     B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪,B}`\n
 Returns the particular gas specific ideal gas partial entropy in the specified or default base
-for the substance with specific heat modeled by `𝐻`, for states with temperature `𝒯`.
+for the substance with specific heat modeled by `𝐻`, for states with temperature `𝑇`. Resulting
+precision, PREC, and exactness, EXAC, are model-driven, and not promotion-driven.
 """
 (s°(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
-    s_(Δs°(𝐻, Tref(𝐻), 𝒯, B) + sref(𝐻, B))
+    𝑇::T_amt{𝕢,𝕪},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪,B} = begin
+    𝑇 = T_amt{𝕡,𝕩}(𝑇)
+    return s°(𝐻, 𝑇, B)
 end
 
 # Fallback method with hasTPair arguments
 (s°(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝒯::hasT{𝕡,𝕩},
-    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕩} = s°(𝐻, 𝒯.T, B)
+    𝑇::hasT{𝕢,𝕪},
+    B::Type{<:IntBase}=DEF[:IB])::s_amt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕩,𝕪,B} = s°(𝐻, 𝑇.T, B)
 
 # Alias
 s0 = s°
@@ -459,17 +481,7 @@ s0 = s°
     #         Δs: Particular gas variation of specific entropy         #
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
 
-"""
-`(ds(𝐻::nobleGasHeat{𝕡,𝕩},
-     Ti::T_amt{𝕡,𝕩},
-     Tf::T_amt{𝕡,𝕩},
-     Pi::P_amt{𝕡,𝕩},
-     Pf::P_amt{𝕡,𝕩},
-     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩}`\n
-Returns the particular gas variation in specific entropy in the specified or default base for
-the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
-and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively.
-"""
+# Type-homogeneous fallback methods
 (ds(𝐻::nobleGasHeat{𝕡,𝕩},
     Ti::T_amt{𝕡,𝕩},
     Tf::T_amt{𝕡,𝕩},
@@ -478,33 +490,6 @@ and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively.
     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
     ds(cp(𝐻, B) * log(Tf/Ti) - R_(𝐻, B) * log(Pf/Pi))
 end
-
-(ds(𝐻::nobleGasHeat{𝕡,𝕩},
-    Pi::P_amt{𝕡,𝕩},
-    Pf::P_amt{𝕡,𝕩},
-    Ti::T_amt{𝕡,𝕩},
-    Tf::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = begin
-    ds(𝐻, Ti, Tf, Pi, Pf, B)
-end
-
-# Fallback versions with <:EoSPair input types
-(ds(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝑖::TPPair{𝕡,𝕩}, # initial (T, P)
-    𝑓::TPPair{𝕡,𝕩}, # final (T, P)
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩} = ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.P, 𝑓.P, B)
-
-"""
-`(ds(𝐻::nobleGasHeat{𝕡,𝕩},
-    Ti::T_amt{𝕡,𝕩},
-    Tf::T_amt{𝕡,𝕩},
-    vi::v_amt{𝕡,𝕩,𝕓},
-    vf::v_amt{𝕡,𝕩,𝕓},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓}`\n
-Returns the particular gas variation in specific entropy in the specified or default base for
-the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
-and specific volumes of `Ti` and `Tf`, and `vi` and `vf`, respectively.
-"""
 (ds(𝐻::nobleGasHeat{𝕡,𝕩},
     Ti::T_amt{𝕡,𝕩},
     Tf::T_amt{𝕡,𝕩},
@@ -514,20 +499,91 @@ and specific volumes of `Ti` and `Tf`, and `vi` and `vf`, respectively.
     ds(cv(𝐻, B) * log(Tf/Ti) + R_(𝐻, B) * log(vf/vi))
 end
 
+
+# Model-driven PREC and EXAC converting (not promoting)
+"""
+`(ds(𝐻::nobleGasHeat{𝕡,𝕩},
+     Ti::T_amt{𝕢,𝕪},
+     Tf::T_amt{𝕣,𝕫},
+     Pi::P_amt{𝕟,𝕧},
+     Pf::P_amt{𝕠,𝕨},
+     B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B}`\n
+Returns the particular gas variation in specific entropy in the specified or default base for
+the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
+and pressures of `Ti` and `Tf`, and `Pi` and `Pf`, respectively. Resulting precision, PREC, and
+exactness, EXAC, are model-driven, and not promotion-driven.
+"""
 (ds(𝐻::nobleGasHeat{𝕡,𝕩},
-    vi::v_amt{𝕡,𝕩,𝕓},
-    vf::v_amt{𝕡,𝕩,𝕓},
-    Ti::T_amt{𝕡,𝕩},
-    Tf::T_amt{𝕡,𝕩},
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = begin
-    ds(𝐻, Ti, Tf, vi, vf, B)    # fallback
+    Ti::T_amt{𝕢,𝕪},
+    Tf::T_amt{𝕣,𝕫},
+    Pi::P_amt{𝕟,𝕧},
+    Pf::P_amt{𝕠,𝕨},
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B} = begin
+    Ti = T_amt{𝕡,𝕩}(Ti)
+    Tf = T_amt{𝕡,𝕩}(Tf)
+    Pi = P_amt{𝕡,𝕩}(Pi)
+    Pf = P_amt{𝕡,𝕩}(Pf)
+    return ds(𝐻, Ti, Tf, Pi, Pf, B)
+end
+(ds(𝐻::nobleGasHeat{𝕡,𝕩},
+    Pi::P_amt{𝕟,𝕧},
+    Pf::P_amt{𝕠,𝕨},
+    Ti::T_amt{𝕢,𝕪},
+    Tf::T_amt{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B} = begin
+    ds(𝐻, Ti, Tf, Pi, Pf, B)
+end
+
+# Fallback versions with <:EoSPair input types
+(ds(𝐻::nobleGasHeat{𝕡,𝕩},
+    𝑖::TPPair{𝕢,𝕪}, # initial (T, P)
+    𝑓::TPPair{𝕣,𝕫}, # final (T, P)
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕢,𝕣,𝕩,𝕪,𝕫,B} = begin
+    ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.P, 𝑓.P, B)
+end
+
+# Model-driven PREC and EXAC converting (not promoting)
+"""
+`(ds(𝐻::nobleGasHeat{𝕡,𝕩},
+    Ti::T_amt{𝕢,𝕪},
+    Tf::T_amt{𝕣,𝕫},
+    vi::v_amt{𝕟,𝕧,𝕓},
+    vf::v_amt{𝕠,𝕨,𝕓},
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B}`\n
+Returns the particular gas variation in specific entropy in the specified or default base for
+the substance with specific heat modeled by `𝐻`, for process with initial and final temperatures
+and specific volumes of `Ti` and `Tf`, and `vi` and `vf`, respectively. Resulting precision,
+PREC, and exactness, EXAC, are model-driven, and not promotion-driven.
+"""
+(ds(𝐻::nobleGasHeat{𝕡,𝕩},
+    Ti::T_amt{𝕢,𝕪},
+    Tf::T_amt{𝕣,𝕫},
+    vi::v_amt{𝕟,𝕧,𝕓},
+    vf::v_amt{𝕠,𝕨,𝕓},
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B} = begin
+    Ti = T_amt{𝕡,𝕩}(Ti)
+    Tf = T_amt{𝕡,𝕩}(Tf)
+    vi = v_amt{𝕡,𝕩,𝕓}(vi)
+    vf = v_amt{𝕡,𝕩,𝕓}(vf)
+    return ds(𝐻, Ti, Tf, vi, vf, B)
+end
+
+(ds(𝐻::nobleGasHeat{𝕡,𝕩},
+    vi::v_amt{𝕟,𝕧,𝕓},
+    vf::v_amt{𝕠,𝕨,𝕓},
+    Ti::T_amt{𝕢,𝕪},
+    Tf::T_amt{𝕣,𝕫},
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕓,𝕟,𝕠,𝕡,𝕢,𝕣,𝕧,𝕨,𝕩,𝕪,𝕫,B} = begin
+    return ds(𝐻, Ti, Tf, vi, vf, B)    # fallback
 end
 
 # Fallback versions with <:ChFPair input types
 (ds(𝐻::nobleGasHeat{𝕡,𝕩},
-    𝑖::TvPair{𝕡,𝕩,𝕓}, # initial (T, v)
-    𝑓::TvPair{𝕡,𝕩,𝕓}, # final (T, v)
-    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕡,𝕩,𝕓} = ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.v, 𝑓.v, B)
+    𝑖::TvPair{𝕟,𝕧,𝕓}, # initial (T, v)
+    𝑓::TvPair{𝕠,𝕨,𝕓}, # final (T, v)
+    B::Type{<:IntBase} = DEF[:IB])::dsamt{𝕡,𝕩,B}) where {𝕟,𝕠,𝕡,𝕧,𝕨,𝕩,𝕓} = begin
+    return ds(𝐻, 𝑖.T, 𝑓.T, 𝑖.v, 𝑓.v, B)
+end
 
 
     #⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅#
