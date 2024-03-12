@@ -18,4 +18,7 @@ include("heat/nobleGas.jl")
 # Includes - the ideal gas EoS model
 include("subs/idealGas.jl")
 
+# Tiny fluid libraries
+include("../lib/heat/nobleGas.jl")
+
 end # module
