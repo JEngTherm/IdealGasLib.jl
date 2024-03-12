@@ -637,7 +637,7 @@ end
 # Type-homogeneous fallback methods
 (Pr(𝐻::nobleGasHeat{𝕡,𝕩},
     𝑇::T_amt{𝕡,𝕩})::Pramt{𝕡,𝕩}) where {𝕡,𝕩} = begin
-    Pr(exp(s°(𝐻, 𝑇, 𝕓) / R_(𝐻, 𝕓)))
+    Pr(exp(s°(𝐻, 𝑇, MO) / R_(𝐻, MO)))
 end
 
 # Model-driven PREC and EXAC converting (not promoting)
