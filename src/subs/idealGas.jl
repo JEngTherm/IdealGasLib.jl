@@ -167,6 +167,12 @@ end
 (v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MO})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕩} = v
 (v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,MA})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕩} = v * m_(x)
 
+# Base-explicit methods
+(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,BA}, B::Type{MO})::v_amt{𝕡,𝕩,MO})
+    where {𝕡,𝕩,BA<:IntBase} = v_(x, v)
+(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕡,𝕩,BA}, B::Type{MA})::v_amt{𝕡,𝕩,MA})
+    where {𝕡,𝕩,BA<:IntBase} = v_(x, v) / m_(x)
+
 """
 `(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA})::v_amt{𝕡,𝕩,MO}) where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase}`\n
 Returns the `x::idealGas{𝕡,𝕩}` specific volume as `v_amt{𝕡,𝕩,MO}`, thus adopting the model's
@@ -188,6 +194,12 @@ precision and exactness rather than doing promotions.
     end
     return v_(x, v_amt{𝕡,𝕩,BA}(valv))       # fallback
 end
+
+# Base-explicit methods
+(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA}, B::Type{MO})::v_amt{𝕡,𝕩,MO})
+    where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase} = v_(x, v)
+(v_(x::idealGas{𝕡,𝕩}, v::v_amt{𝕢,𝕪,BA}, B::Type{MA})::v_amt{𝕡,𝕩,MA})
+    where {𝕡,𝕢,𝕩,𝕪,BA<:IntBase} = v_(x, v) / m_(x)
 
 # Ideal Gas calculation methods
 # Fallback method, with uniform PREC, EXAC:
