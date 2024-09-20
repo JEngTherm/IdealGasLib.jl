@@ -14,6 +14,7 @@ include("interface.jl")
 
 # Includes - specific heat models for ideal gases
 include("heat/nobleGas.jl")
+include("heat/series-T.jl")
 
 # Includes - the ideal gas EoS model
 include("subs/idealGas.jl")
