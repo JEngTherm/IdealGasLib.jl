@@ -28,7 +28,7 @@ export idealGas
 # Type displaying
 deco(x::idealGas) = Symbol("ideal gas")
 
-Base.show(io::IO, x::idealGas{ℍ}) where {ℍ<:Heat{𝕡,𝕩}} where {𝕡,𝕩} = begin
+Base.show(io::IO, x::idealGas{𝕡,𝕩,ℍ}) where {𝕡,𝕩,ℍ} = begin
     if DEF[:pprint]
         print(io,
             "$(x.name) $(string(deco(x))) \"$(x.form)\" ",
